@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding_small">4dp</dimen>
+    <dimen name="padding_normal">16dp</dimen>
+    <dimen name="padding_large">21dp</dimen>
+    <dimen name="icon_size">48dp</dimen>
+    <dimen name="header_height">56dp</dimen>
+    <dimen name="margin_bottom">24dp</dimen>
+    <dimen name="text_size_large">22sp</dimen>
+    <dimen name="text_size_normal">16sp</dimen>
+    <dimen name="padding_top_medium">14dp</dimen>
+    <dimen name="padding_bottom_extra">40dp</dimen>
+    <dimen name="icon_padding">8dp</dimen>
+    <dimen name="button_corner_radius">16dp</dimen>
+</resources>
