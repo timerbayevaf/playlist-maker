@@ -2,7 +2,7 @@
 <resources>
     <dimen name="padding_small">4dp</dimen>
     <dimen name="padding_normal">16dp</dimen>
-    <dimen name="padding_large">21dp</dimen>
+    <dimen name="padding_large">20dp</dimen>
     <dimen name="icon_size">48dp</dimen>
     <dimen name="header_height">56dp</dimen>
     <dimen name="margin_bottom">24dp</dimen>

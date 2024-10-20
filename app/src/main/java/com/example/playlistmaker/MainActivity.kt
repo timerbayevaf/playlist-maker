@@ -1,7 +1,6 @@
 package com.example.playlistmaker
 
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Button
 import android.content.Intent
@@ -10,7 +9,6 @@ import android.view.View
 class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    enableEdgeToEdge()
     setContentView(R.layout.activity_main)
 
     val searchButton = findViewById<Button>(R.id.search)
