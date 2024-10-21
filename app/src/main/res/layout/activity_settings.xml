@@ -13,17 +13,19 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/header_height"
         android:layout_marginBottom="@dimen/margin_bottom"
-        android:background="@color/white"
+        app:titleTextColor="@color/black"
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:navigationIcon="@drawable/back"
         android:textSize="22sp"
         app:title="@string/settings"
-        app:titleTextAppearance="@style/ToolbarTitleText"
+        android:titleTextAppearance="@style/ToolbarTitleText"
     />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:thumbTint="@color/switch_thumb_color"
+        app:trackTint="@color/switch_track_color"
         android:paddingVertical="@dimen/padding_large"
         android:paddingStart="@dimen/padding_normal"
         android:paddingEnd="5dp"
