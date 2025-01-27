@@ -5,20 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white"
+    android:background="?attr/colorSurface"
     >
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/header_height"
-        android:layout_marginBottom="@dimen/margin_bottom"
-        app:titleTextColor="@color/black"
-        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:navigationIcon="@drawable/back"
-        android:textSize="22sp"
+        style="@style/BaseToolbar"
+        android:layout_marginBottom="@dimen/margin_bottom"
         app:title="@string/settings"
-        android:titleTextAppearance="@style/ToolbarTitleText"
     />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
@@ -30,40 +25,37 @@
         android:paddingStart="@dimen/padding_normal"
         android:paddingEnd="5dp"
         android:text="@string/theme"
-        android:textColor="@color/black"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="@dimen/text_size_normal" />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/padding_large"
-        android:paddingStart="@dimen/padding_normal"
-        android:paddingEnd="@dimen/padding_normal"
+        android:id="@+id/share_button"
+        style="@style/SettingsItem"
         android:text="@string/share"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_normal"
-        app:drawableEndCompat="@drawable/share" />
+        android:textColor="?attr/colorOnSurface"
+        app:drawableEndCompat="@drawable/share"
+        android:clickable="true"
+        android:focusable="true"
+    />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/padding_large"
-        android:paddingStart="@dimen/padding_normal"
-        android:paddingEnd="14dp"
-        android:text="@string/settings"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_normal"
-        app:drawableEndCompat="@drawable/settings" />
+        android:id="@+id/support_button"
+        style="@style/SettingsItem"
+        android:text="@string/support"
+        android:textColor="?attr/colorOnSurface"
+        app:drawableEndCompat="@drawable/support"
+        android:clickable="true"
+        android:focusable="true"
+    />
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="@dimen/padding_large"
-        android:paddingStart="@dimen/padding_normal"
-        android:paddingEnd="14dp"
+        android:id="@+id/user_agreement"
+        style="@style/SettingsItem"
+        android:textColor="?attr/colorOnSurface"
         android:text="@string/user_agreement"
-        android:textColor="@color/black"
-        android:textSize="@dimen/text_size_normal"
-        app:drawableEndCompat="@drawable/arrow" />
+        app:drawableEndCompat="@drawable/arrow"
+        android:clickable="true"
+        android:focusable="true"
+    />
 
 </LinearLayout>
