@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,6 +11,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 
 class SearchActivity : AppCompatActivity() {
 
@@ -21,6 +23,12 @@ class SearchActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_search)
+
+    val toolbar = findViewById<Toolbar>(R.id.toolbar)
+    toolbar.setNavigationOnClickListener {
+      val displayIntent = Intent(this, MainActivity::class.java)
+      startActivity(displayIntent)
+    }
 
     searchEditText = findViewById(R.id.search_edit_text)
     clearButton = findViewById(R.id.clearButton)
