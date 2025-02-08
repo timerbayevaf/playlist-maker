@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/background_input"/>
+
+    <stroke android:width="2dp"
+        android:color="@color/background_input"/>
+
+    <padding android:left="2dp"
+        android:top="8dp"
+        android:right="2dp"
+        android:bottom="8dp"/>
+
+    <corners android:radius="8dp" />
+</shape>

@@ -4,7 +4,13 @@
     <string name="search">Поиск</string>
     <string name="media_library">Медиатека</string>
     <string name="settings">Настройки</string>
+    <string name="support">Написать в поддержку</string>
     <string name="theme">Темная тема</string>
     <string name="share">Поделиться приложением</string>
     <string name="user_agreement">Пользовательское соглашение</string>
+    <string name="share_text">"https://practicum.yandex.ru/android-developer/"</string>
+    <string name="email">"timerbayevaf@yandex.ru"</string>
+    <string name="email_subject">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="email_body">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="url_user_agreement">https://yandex.ru/legal/practicum_offer/</string>
 </resources>
