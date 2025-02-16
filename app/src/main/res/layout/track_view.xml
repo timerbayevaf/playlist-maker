@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/trackId"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/trackImage"
+        android:layout_width="@dimen/icon_45"
+        android:layout_height="@dimen/icon_45"
+        style="@style/TrackCardView"
+        android:layout_marginStart="@dimen/padding_top_medium"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/trackName"
+            style="@style/TrackName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="Song Title" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/artistName"
+                style="@style/ArtistDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                tools:text="Artist Name" />
+
+            <ImageView
+                android:id="@+id/trackSeparator"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                style="@style/TrackSeparator"
+                android:src="@drawable/separator"
+                android:layout_gravity="center"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/trackTime"
+                style="@style/ArtistDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                tools:text="Duration" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivIconArrow"
+        style="@style/TrackIconArrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_bottom"
+        android:src="@drawable/arrow_right"
+        tools:ignore="ContentDescription" />
+</LinearLayout>
