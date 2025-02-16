@@ -32,7 +32,6 @@
             style="@style/TrackName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
             android:textStyle="bold"
             tools:text="Song Title" />
 
@@ -45,7 +44,6 @@
                 style="@style/ArtistDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="18sp"
                 tools:text="Artist Name" />
 
             <ImageView
@@ -62,7 +60,6 @@
                 style="@style/ArtistDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
                 tools:text="Duration" />
         </LinearLayout>
     </LinearLayout>

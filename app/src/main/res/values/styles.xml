@@ -53,16 +53,14 @@
     <style name="OutlineTextInputStyle" parent="ThemeOverlay.Material3.TextInputEditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:maxLines">1</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:inputType">text</item>
         <item name="android:textColorHint">@color/input_tint_color</item>
+        <item name="android:hint">#3772E7</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="drawableTint">@color/input_tint_color</item>
         <item name="android:textColor">@color/black</item>
-    </style>
-
-    <style name="RecyclerView">
-        <item name="android:background">@color/white</item>
     </style>
 
     <style name="TrackCardView">
