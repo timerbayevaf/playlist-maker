@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface"
@@ -25,12 +26,13 @@
             android:id="@+id/search_edit_text"
             style="@style/OutlineTextInputStyle"
             android:drawableStart="@drawable/search"
+            android:textCursorDrawable="@drawable/cursor_color"
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:hint="@string/search"
             android:imeOptions="actionSearch"
             android:inputType="text|textNoSuggestions"
-            android:maxLines="1" />
+           />
 
         <ImageButton
             android:id="@+id/clearButton"
@@ -43,4 +45,13 @@
 
     </FrameLayout>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:paddingHorizontal="2dp"
+        android:paddingTop="30dp"
+        tools:listitem="@layout/track_view" />
 </LinearLayout>
