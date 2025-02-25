@@ -30,17 +30,14 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:hint="@string/search"
-            android:imeOptions="actionSearch"
             android:inputType="text|textNoSuggestions"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
            />
 
         <ImageButton
-            android:id="@+id/clearButton"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_gravity="end|center_vertical"
-            android:background="@color/background_input"
-            android:src="@drawable/clear"
+            android:id="@+id/clear_button"
+            style="@style/OutlineTextClearStyle"
             android:visibility="gone" />
 
     </FrameLayout>
@@ -54,4 +51,52 @@
         android:paddingHorizontal="2dp"
         android:paddingTop="30dp"
         tools:listitem="@layout/track_view" />
+
+    <LinearLayout
+        android:id="@+id/placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:layout_marginTop="110dp"
+        android:layout_marginStart="@dimen/margin_bottom"
+        android:layout_marginEnd="@dimen/margin_bottom"
+        >
+
+        <ImageView
+            android:id="@+id/no_connection_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/SearchNoConnectionImage"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/nothing_found_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:ignore="ContentDescription"
+            style="@style/SearchNothingFoundImage"/>
+
+        <TextView
+            android:id="@+id/error_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            style="@style/SearchErrorMessage"
+            android:layout_marginTop="@dimen/padding_large"
+            />
+
+        <Button
+            android:id="@+id/button_update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/icon_10"
+            android:text="@string/update"
+            style="@style/SearchUpdateButton"/>
+
+    </LinearLayout>
 </LinearLayout>

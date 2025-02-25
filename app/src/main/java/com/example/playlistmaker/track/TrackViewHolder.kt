@@ -1,13 +1,19 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.track
 
-import android.view.View
+import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.R
+import java.text.SimpleDateFormat
+import java.util.Locale
 
-class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+class TrackViewHolder(parent: ViewGroup): RecyclerView.ViewHolder(
+    LayoutInflater.from(parent.context)
+    .inflate(R.layout.track_view, parent, false)) {
 
     // Уникальный идентификатор трека
 //    private val trackId: TextView = itemView.findViewById(R.id.trackId)
@@ -19,7 +25,7 @@ class TrackViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
     fun bind(model: Track) {
         trackName.text = model.trackName
         artistName.text = model.artistName
-        trackTime.text = model.trackTime
+        trackTime.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(model.trackTimeMillis)
 
         Glide.with(itemView)
             .load(model.artworkUrl100)
