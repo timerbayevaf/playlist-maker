@@ -1,134 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/BaseLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    style="@style/BaseLinearLayout"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingTop="14dp"
+    android:paddingBottom="40dp"
+    tools:context=".SearchActivity"
+    tools:ignore="ScrollViewSize">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/BaseToolbar"
+        app:contentInsetStartWithNavigation="0dp"
+        app:navigationIcon="@drawable/back"
+        app:title="@string/search" />
+
+    <FrameLayout
+        style="@style/OutlineContainer"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/outline_shape">
+
+        <EditText
+            android:id="@+id/search_edit_text"
+            style="@style/OutlineTextInputStyle"
+            android:drawableStart="@drawable/search"
+            android:textCursorDrawable="@drawable/cursor_color"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:hint="@string/search"
+            android:inputType="text|textNoSuggestions"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
+           />
+
+        <ImageButton
+            android:id="@+id/clear_button"
+            style="@style/OutlineTextClearStyle"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/search_history_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search_history_title"
+        android:layout_marginTop="26dp"
+        style="@style/TittleSearchHistory" />
+
+    <!-- RecyclerView с фиксированной высотой -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:paddingHorizontal="2dp"
+        android:paddingTop="30dp"
+        tools:listitem="@layout/track_view" />
+
+    <!-- Кнопка "Очистить историю" -->
+    <Button
+        android:id="@+id/search_history_clear_button"
+        style="@style/SearchButtonUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/icon_10"
+        android:text="@string/search_history_clear"
+        app:cornerRadius="54dp" />
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        style="@style/BaseLinearLayout"
+        android:id="@+id/placeholder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="14dp"
-        android:paddingBottom="40dp"
-        tools:context=".SearchActivity"
-        tools:ignore="ScrollViewSize">
+        android:layout_gravity="center_horizontal"
+        android:visibility="gone"
+        android:layout_marginTop="110dp"
+        android:layout_marginStart="@dimen/margin_bottom"
+        android:layout_marginEnd="@dimen/margin_bottom"
+        >
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/BaseToolbar"
-            app:contentInsetStartWithNavigation="0dp"
-            app:navigationIcon="@drawable/back"
-            app:title="@string/search" />
+        <ImageView
+            android:id="@+id/no_connection_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/SearchNoConnectionImage"
+            tools:ignore="ContentDescription" />
 
-        <FrameLayout
-            style="@style/OutlineContainer"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/outline_shape">
-
-            <EditText
-                android:id="@+id/search_edit_text"
-                style="@style/OutlineTextInputStyle"
-                android:drawableStart="@drawable/search"
-                android:textCursorDrawable="@drawable/cursor_color"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:hint="@string/search"
-                android:inputType="text|textNoSuggestions"
-                android:imeOptions="actionDone"
-                android:singleLine="true"
-               />
-
-            <ImageButton
-                android:id="@+id/clear_button"
-                style="@style/OutlineTextClearStyle"
-                android:visibility="gone" />
-
-        </FrameLayout>
+        <ImageView
+            android:id="@+id/nothing_found_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:ignore="ContentDescription"
+            style="@style/SearchNothingFoundImage"/>
 
         <TextView
-            android:id="@+id/search_history_title"
+            android:id="@+id/error_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/search_history_title"
-            android:layout_marginTop="26dp"
-            style="@style/TittleSearchHistory" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:orientation="vertical"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            android:paddingHorizontal="2dp"
-            android:paddingTop="30dp"
-            tools:listitem="@layout/track_view" />
-
+            style="@style/SearchErrorMessage"
+            android:layout_marginTop="@dimen/padding_large"
+            />
 
         <Button
-            android:id="@+id/search_history_clear_button"
-            style="@style/SearchButtonUpdate"
+            android:id="@+id/button_update"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/icon_10"
-            android:text="@string/search_history_clear"
-            app:cornerRadius="54dp" />
+            android:text="@string/update"
+            style="@style/SearchUpdateButton"/>
 
-        <LinearLayout
-            android:id="@+id/placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone"
-            android:layout_marginTop="110dp"
-            android:layout_marginStart="@dimen/margin_bottom"
-            android:layout_marginEnd="@dimen/margin_bottom"
-            >
-
-            <ImageView
-                android:id="@+id/no_connection_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                style="@style/SearchNoConnectionImage"
-                tools:ignore="ContentDescription" />
-
-            <ImageView
-                android:id="@+id/nothing_found_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                tools:ignore="ContentDescription"
-                style="@style/SearchNothingFoundImage"/>
-
-            <TextView
-                android:id="@+id/error_message"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                style="@style/SearchErrorMessage"
-                android:layout_marginTop="@dimen/padding_large"
-                />
-
-            <Button
-                android:id="@+id/button_update"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/icon_10"
-                android:text="@string/update"
-                style="@style/SearchUpdateButton"/>
-
-        </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</LinearLayout>

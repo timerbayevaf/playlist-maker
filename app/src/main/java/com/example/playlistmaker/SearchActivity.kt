@@ -132,7 +132,7 @@ class SearchActivity : AppCompatActivity() {
 
       override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         searchQuery = s?.toString() ?: ""
-        updateClearButtonVisibility(s)
+        updateVisibility(s)
       }
 
       override fun afterTextChanged(s: Editable?) {}
@@ -188,9 +188,17 @@ class SearchActivity : AppCompatActivity() {
     searchHistoryClearButton.visibility = View.GONE
   }
 
-  private fun updateClearButtonVisibility(text: CharSequence?) {
+  private fun updateVisibility(text: CharSequence?) {
     if (text.isNullOrEmpty()) {
       clearButton.visibility = ImageButton.GONE
+      // Если запрос пуст, скрываем результаты поиска и показываем историю (если она есть)
+      trackList.clear()
+      trackAdapter?.notifyDataSetChanged()
+      if (historyTrackList.isNotEmpty()) {
+        showHistory()
+      } else {
+        setGoneHistoryElement()
+      }
     } else  {
       clearButton.visibility = ImageButton.VISIBLE
       setGoneHistoryElement()
