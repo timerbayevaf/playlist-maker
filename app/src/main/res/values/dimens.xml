@@ -7,6 +7,7 @@
     <dimen name="header_height">56dp</dimen>
     <dimen name="margin_bottom">24dp</dimen>
     <dimen name="text_size_large">22sp</dimen>
+    <dimen name="text_size_title">19sp</dimen>
     <dimen name="text_size_normal">16sp</dimen>
     <dimen name="text_size_small">11sp</dimen>
     <dimen name="padding_top_medium">14dp</dimen>

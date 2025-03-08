@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?attr/colorSurface"
+    style="@style/BaseLinearLayout"
     >
 
     <androidx.appcompat.widget.Toolbar
@@ -17,6 +17,7 @@
     />
 
     <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/switchTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:thumbTint="@color/switch_thumb_color"

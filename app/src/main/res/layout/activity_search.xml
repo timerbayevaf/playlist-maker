@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/BaseLinearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
     android:orientation="vertical"
     android:paddingTop="14dp"
-    android:paddingBottom="40dp">
+    android:paddingBottom="40dp"
+    tools:context=".SearchActivity"
+    tools:ignore="ScrollViewSize">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -42,20 +45,41 @@
 
     </FrameLayout>
 
+    <TextView
+        android:id="@+id/search_history_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search_history_title"
+        android:layout_marginTop="26dp"
+        style="@style/TittleSearchHistory" />
+
+    <!-- RecyclerView с фиксированной высотой -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:paddingHorizontal="2dp"
         android:paddingTop="30dp"
         tools:listitem="@layout/track_view" />
 
+    <!-- Кнопка "Очистить историю" -->
+    <Button
+        android:id="@+id/search_history_clear_button"
+        style="@style/SearchButtonUpdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/icon_10"
+        android:text="@string/search_history_clear"
+        app:cornerRadius="54dp" />
+
     <LinearLayout
         android:id="@+id/placeholder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="center_horizontal"
         android:visibility="gone"
