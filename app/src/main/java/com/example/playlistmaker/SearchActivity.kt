@@ -76,8 +76,7 @@ class SearchActivity : AppCompatActivity() {
 
     val toolbar = findViewById<Toolbar>(R.id.toolbar)
     toolbar.setNavigationOnClickListener {
-      val displayIntent = Intent(this, MainActivity::class.java)
-      startActivity(displayIntent)
+      finish()
     }
 
     // кнопка очистить историю поиска

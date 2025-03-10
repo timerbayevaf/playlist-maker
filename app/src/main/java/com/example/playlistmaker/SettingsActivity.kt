@@ -17,8 +17,7 @@ class SettingsActivity : AppCompatActivity() {
     val themeSwitcher = findViewById<SwitchMaterial>(R.id.switchTheme)
     val toolbar = findViewById<Toolbar>(R.id.toolbar)
     toolbar.setNavigationOnClickListener {
-      val displayIntent = Intent(this, MainActivity::class.java)
-      startActivity(displayIntent)
+      finish()
     }
 
     // Обработчик нажатия на кнопку «Поделиться»
