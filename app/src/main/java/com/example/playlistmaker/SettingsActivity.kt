@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -13,10 +14,10 @@ class SettingsActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_settings)
 
+    val themeSwitcher = findViewById<SwitchMaterial>(R.id.switchTheme)
     val toolbar = findViewById<Toolbar>(R.id.toolbar)
     toolbar.setNavigationOnClickListener {
-      val displayIntent = Intent(this, MainActivity::class.java)
-      startActivity(displayIntent)
+      finish()
     }
 
     // Обработчик нажатия на кнопку «Поделиться»
@@ -32,6 +33,14 @@ class SettingsActivity : AppCompatActivity() {
     // Обработчик нажатия на кнопку «Пользовательское соглашение»
     findViewById<TextView>(R.id.user_agreement).setOnClickListener {
       openUserAgreement()
+    }
+
+    // Настройка switch "Темная тема"
+    themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+      (applicationContext as App).switchTheme(checked)
+    }
+    if ((applicationContext as App).darkTheme) {
+      themeSwitcher.isChecked = true;
     }
   }
 

@@ -39,8 +39,9 @@ class SearchActivity : AppCompatActivity() {
     .build()
 
   private val itunesService = retrofit.create(TrackApi::class.java)
-  private var trackList = ArrayList<Track>();
-  private val trackAdapter = TrackAdapter(trackList)
+  private var trackList = ArrayList<Track>()
+  private var historyTrackList = ArrayList<Track>()
+  private var trackAdapter: TrackAdapter? = null
 
   private lateinit var placeholder: LinearLayout
   private lateinit var placeholderNoConnection: ImageView
@@ -49,12 +50,17 @@ class SearchActivity : AppCompatActivity() {
   private lateinit var searchEditText: EditText
   private lateinit var clearButton: ImageButton
   private lateinit var updateButton: Button
+  private lateinit var searchHistoryTitle: TextView
+  private lateinit var searchHistoryClearButton: Button
   private val imm by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
   private var searchQuery: String = ""
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_search)
+
+    // Инициализация истории поиска
+    historyTrackList = SearchHistory.getHistory()
 
     placeholder = findViewById(R.id.placeholder)
     placeholderNoConnection = findViewById(R.id.no_connection_image)
@@ -65,10 +71,20 @@ class SearchActivity : AppCompatActivity() {
     updateButton = findViewById(R.id.button_update)
     clearButton = findViewById(R.id.clear_button)
 
+    searchHistoryTitle = findViewById(R.id.search_history_title)
+    searchHistoryClearButton = findViewById(R.id.search_history_clear_button)
+
     val toolbar = findViewById<Toolbar>(R.id.toolbar)
     toolbar.setNavigationOnClickListener {
-      val displayIntent = Intent(this, MainActivity::class.java)
-      startActivity(displayIntent)
+      finish()
+    }
+
+    // кнопка очистить историю поиска
+    searchHistoryClearButton.setOnClickListener {
+      SearchHistory.clearHistoryList()
+      historyTrackList.clear()
+      setGoneHistoryElement()
+      trackAdapter?.notifyDataSetChanged()
     }
 
     // Автофокус и вызов клавиатуры
@@ -77,8 +93,15 @@ class SearchActivity : AppCompatActivity() {
 
     setupSearchFieldBehavior()
 
+    trackAdapter = TrackAdapter()
     val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
     recyclerView.adapter = trackAdapter
+    trackAdapter!!.trackList = trackList
+
+    // Проверка условий для отображения истории при открытии активности
+    if (searchEditText.text.isEmpty() && searchEditText.hasFocus() && historyTrackList.isNotEmpty()) {
+      showHistory()
+    }
   }
 
   private fun showMessage(text: String, additionalMessage: String) {
@@ -87,7 +110,7 @@ class SearchActivity : AppCompatActivity() {
       placeholderNoConnection.visibility = View.GONE
       placeholderNothingFound.visibility = View.VISIBLE
       trackList.clear()
-      trackAdapter.notifyDataSetChanged()
+      trackAdapter?.notifyDataSetChanged()
       placeholderError.text = text
 
       if (additionalMessage.isNotEmpty()) {
@@ -108,7 +131,7 @@ class SearchActivity : AppCompatActivity() {
 
       override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
         searchQuery = s?.toString() ?: ""
-        updateClearButtonVisibility(s)
+        updateVisibility(s)
       }
 
       override fun afterTextChanged(s: Editable?) {}
@@ -120,6 +143,7 @@ class SearchActivity : AppCompatActivity() {
       imm.hideSoftInputFromWindow(searchEditText.windowToken, 0)
       trackList.clear()
       placeholder?.visibility = View.GONE
+      showHistory()
       trackAdapter?.notifyDataSetChanged()
     }
 
@@ -132,10 +156,53 @@ class SearchActivity : AppCompatActivity() {
     searchEditText.setOnEditorActionListener { _, actionId, _ ->
       handleSearchAction(actionId)
     }
+
+    // фокусирование на вводе текста
+    searchEditText.setOnFocusChangeListener { _, hasFocus ->
+      focusVisibility(hasFocus)
+    }
   }
 
-  private fun updateClearButtonVisibility(text: CharSequence?) {
-    clearButton.visibility = if (text.isNullOrEmpty()) ImageButton.GONE else ImageButton.VISIBLE
+  private fun focusVisibility(hasFocus: Boolean) {
+    if (hasFocus && searchEditText.text.isEmpty() && historyTrackList.isNotEmpty()) {
+      searchHistoryTitle.visibility = View.VISIBLE
+      searchHistoryClearButton.visibility = View.VISIBLE
+    } else {
+      setGoneHistoryElement()
+    }
+    trackAdapter?.trackList = historyTrackList
+    trackAdapter?.notifyDataSetChanged()
+  }
+
+  private fun showHistory() {
+    searchHistoryTitle.visibility = View.VISIBLE
+    searchHistoryClearButton.visibility = View.VISIBLE
+    historyTrackList = SearchHistory.getHistory()
+    trackAdapter?.trackList = historyTrackList
+    trackAdapter?.notifyDataSetChanged()
+  }
+
+  private fun setGoneHistoryElement() {
+    searchHistoryTitle.visibility = View.GONE
+    searchHistoryClearButton.visibility = View.GONE
+  }
+
+  private fun updateVisibility(text: CharSequence?) {
+    if (text.isNullOrEmpty()) {
+      clearButton.visibility = ImageButton.GONE
+      // Если запрос пуст, скрываем результаты поиска и показываем историю (если она есть)
+      trackList.clear()
+      trackAdapter?.notifyDataSetChanged()
+      if (historyTrackList.isNotEmpty()) {
+        showHistory()
+      } else {
+        setGoneHistoryElement()
+      }
+    } else  {
+      clearButton.visibility = ImageButton.VISIBLE
+      setGoneHistoryElement()
+      trackAdapter?.trackList = trackList
+    }
   }
 
   private fun handleSearchAction(actionId: Int): Boolean {
@@ -160,7 +227,7 @@ class SearchActivity : AppCompatActivity() {
             response.body()?.results?.let { results ->
               if (results.isNotEmpty()) {
                 trackList.addAll(results)
-                trackAdapter.notifyDataSetChanged()
+                trackAdapter?.notifyDataSetChanged()
               } else {
                 showMessage(getString(R.string.nothing_found), "")
               }
@@ -187,5 +254,9 @@ class SearchActivity : AppCompatActivity() {
     super.onRestoreInstanceState(savedInstanceState)
     searchQuery = savedInstanceState.getString("SEARCH_QUERY", "")
     searchEditText.setText(searchQuery)
+
+    if (searchQuery.isEmpty() && searchEditText.hasFocus() && historyTrackList.isNotEmpty()) {
+      showHistory()
+    }
   }
 }
