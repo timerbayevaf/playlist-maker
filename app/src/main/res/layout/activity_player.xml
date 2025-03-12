@@ -25,6 +25,7 @@
         app:layout_constraintGuide_end="@dimen/padding_normal"
         />
 
+    <!-- Разделитель для текста описания -->
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/textsBarrier"
         android:layout_width="wrap_content"
@@ -87,34 +88,33 @@
 
 
     <!-- Кнопка добавления в плейлист -->
-    <ImageView
+    <ImageButton
         android:id="@+id/addToPlaylistButton"
-        style="@style/PlayerAddToPlaylistButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/PlayerAddToPlaylistButton"
         app:layout_constraintTop_toTopOf="@id/playPauseButton"
         app:layout_constraintStart_toStartOf="@id/leftGuideline"
         app:layout_constraintBottom_toBottomOf="@id/playPauseButton"
     />
 
     <!-- Кнопка воспроизведения/паузы -->
-    <ImageView
+    <ImageButton
         android:id="@+id/playPauseButton"
-        style="@style/PlayerPlayButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        style="@style/PlayerPlayButton"
         app:layout_constraintStart_toStartOf="@id/leftGuideline"
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"
         app:layout_constraintBottom_toTopOf="@id/trackTime"
         android:layout_marginTop="30dp"
-    />
+        />
 
     <!-- Кнопка добавления в избранное -->
-    <ImageView
+    <ImageButton
         android:id="@+id/addToFavoritesButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
         style="@style/PlayerAddToFavoritesButton"
         app:layout_constraintTop_toTopOf="@id/playPauseButton"
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"

@@ -48,7 +48,7 @@ class PlayerActivity : AppCompatActivity() {
       }
 
       durationContent.text = track.getFormattedTrackTime()
-      yearContent.text = track.releaseDate
+      yearContent.text = track.getFormattedReleaseYear()
       genreContent.text = track.primaryGenreName
       countryContent.text = track.country
 

@@ -164,15 +164,18 @@
 
     <style name="PlayerPlayButton">
         <item name="android:src">@drawable/play_light</item>
+        <item name="android:background">@drawable/round_button_light</item>
     </style>
 
     <style name="PlayerAddToPlaylistButton">
         <item name="android:src">@drawable/add_to_playlist_light</item>
+        <item name="android:background">@drawable/round_button_light</item>
     </style>
 
 
     <style name="PlayerAddToFavoritesButton">
         <item name="android:src">@drawable/favorite_light</item>
+        <item name="android:background">@drawable/round_button_light</item>
     </style>
 
     <style name="PlayerTrackName">
