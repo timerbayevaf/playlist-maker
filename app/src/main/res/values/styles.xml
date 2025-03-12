@@ -162,4 +162,51 @@
         <item name="android:visibility">gone</item>
     </style>
 
+    <style name="PlayerPlayButton">
+        <item name="android:src">@drawable/play_light</item>
+    </style>
+
+    <style name="PlayerAddToPlaylistButton">
+        <item name="android:src">@drawable/add_to_playlist_light</item>
+    </style>
+
+
+    <style name="PlayerAddToFavoritesButton">
+        <item name="android:src">@drawable/favorite_light</item>
+    </style>
+
+    <style name="PlayerTrackName">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/background_night</item>
+        <item name="android:textSize">@dimen/text_size_large</item>
+    </style>
+
+    <style name="PlayerTrackArtist">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/background_night</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="PlayerTrackTime">
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/background_night</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="PlayerTittle">
+        <item name="android:layout_marginTop">9dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textSize">@dimen/text_size_small_title</item>
+    </style>
+
+    <style name="PlayerContent" >
+        <item name="android:layout_marginTop">9dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/background_night</item>
+        <item name="android:textSize">@dimen/text_size_small_title</item>
+    </style>
+
 </resources>

@@ -1,0 +1,8 @@
+<resources>
+    <!-- Цвет фона иконки -->
+    <attr name="iconBackgroundColor" format="color"/>
+    <!-- Прозрачность фона иконки -->
+    <attr name="iconBackgroundOpacity" format="float"/>
+    <!-- Цвет сердечка -->
+    <attr name="iconColor" format="color"/>
+</resources>
