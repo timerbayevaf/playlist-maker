@@ -25,6 +25,13 @@
         app:layout_constraintGuide_end="@dimen/padding_normal"
         />
 
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/textsBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_tags="durationTitle, albumTittle, yearTittle, genreTittle, countryTittle"
+        app:barrierDirection="end" />
+
     <!-- Toolbar "Назад" -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -131,6 +138,7 @@
     <!-- Длительность-->
     <TextView
         android:id="@+id/durationTitle"
+        app:layout_constraintTag="durationTitle"
         style="@style/PlayerTittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -150,7 +158,7 @@
         tools:text="2:20"
         app:layout_constraintBottom_toTopOf="@id/albumContent"
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"
-        app:layout_constraintStart_toEndOf="@+id/durationTitle"
+        app:layout_constraintStart_toEndOf="@+id/textsBarrier"
         android:layout_alignBaseline="@id/durationTitle"
         android:gravity="end"
         android:maxLines="2"
@@ -160,6 +168,7 @@
     <!-- Альбом-->
     <TextView
         android:id="@+id/albumTittle"
+        app:layout_constraintTag="albumTittle"
         style="@style/PlayerTittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -180,13 +189,14 @@
         app:layout_constraintBottom_toTopOf="@id/yearContent"
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"
         android:layout_alignBaseline="@id/albumTittle"
-        app:layout_constraintStart_toEndOf="@+id/albumTittle"
+        app:layout_constraintStart_toEndOf="@+id/textsBarrier"
         android:maxLines="1"
         />
 
     <!-- Год -->
     <TextView
         android:id="@+id/yearTittle"
+        app:layout_constraintTag="yearTittle"
         style="@style/PlayerTittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -207,7 +217,7 @@
         android:maxLines="1"
         app:layout_constraintBottom_toTopOf="@id/genreContent"
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"
-        app:layout_constraintStart_toEndOf="@+id/yearTittle"
+        app:layout_constraintStart_toEndOf="@+id/textsBarrier"
         android:layout_alignBaseline="@id/yearTittle"
     />
 
@@ -215,6 +225,7 @@
     <!-- Жанр -->
     <TextView
         android:id="@+id/genreTittle"
+        app:layout_constraintTag="genreTittle"
         style="@style/PlayerTittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -232,7 +243,7 @@
         android:gravity="end"
         android:maxLines="1"
         tools:text="Rock"
-        app:layout_constraintStart_toEndOf="@+id/genreTittle"
+        app:layout_constraintStart_toEndOf="@+id/textsBarrier"
         app:layout_constraintBottom_toTopOf="@id/countryContent"
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"
         android:layout_alignBaseline="@id/genreTittle"
@@ -241,6 +252,7 @@
     <!-- Страна -->
     <TextView
         android:id="@+id/countryTittle"
+        app:layout_constraintTag="countryTittle"
         style="@style/PlayerTittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -259,7 +271,7 @@
         tools:text="Великобритания"
         android:gravity="end"
         android:maxLines="1"
-        app:layout_constraintStart_toEndOf="@id/countryTittle"
+        app:layout_constraintStart_toEndOf="@id/textsBarrier"
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"
         android:layout_marginBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
