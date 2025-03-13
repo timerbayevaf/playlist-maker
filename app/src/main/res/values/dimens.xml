@@ -10,6 +10,7 @@
     <dimen name="text_size_title">19sp</dimen>
     <dimen name="text_size_normal">16sp</dimen>
     <dimen name="text_size_small">11sp</dimen>
+    <dimen name="text_size_small_title">13sp</dimen>
     <dimen name="padding_top_medium">14dp</dimen>
     <dimen name="padding_bottom_extra">40dp</dimen>
     <dimen name="icon_padding">8dp</dimen>
@@ -19,5 +20,7 @@
     <dimen name="icon_10">10dp</dimen>
     <dimen name="icon_14">14dp</dimen>
     <dimen name="icon_36">36dp</dimen>
+    <dimen name="icon_63">63dp</dimen>
+    <dimen name="icon_84">84dp</dimen>
     <dimen name="margin_small">8dp</dimen>
 </resources>

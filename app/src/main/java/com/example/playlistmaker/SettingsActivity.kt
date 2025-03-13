@@ -36,11 +36,11 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     // Настройка switch "Темная тема"
-    themeSwitcher.setOnCheckedChangeListener { switcher, checked ->
+    themeSwitcher.setOnCheckedChangeListener { _, checked ->
       (applicationContext as App).switchTheme(checked)
     }
     if ((applicationContext as App).darkTheme) {
-      themeSwitcher.isChecked = true;
+      themeSwitcher.isChecked = true
     }
   }
 
@@ -73,7 +73,7 @@ class SettingsActivity : AppCompatActivity() {
   }
 
   private fun openUserAgreement() {
-    val url = getString(R.string.url_user_agreement);
+    val url = getString(R.string.url_user_agreement)
     val userAgreementIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
 
     startActivity(userAgreementIntent)

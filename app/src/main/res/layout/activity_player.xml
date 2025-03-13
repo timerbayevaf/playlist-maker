@@ -1,0 +1,281 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    tools:context=".PlayerActivity">
+
+    <!-- Левая Guideline -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/leftGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/padding_normal"
+     />
+
+    <!-- Правая Guideline -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/rightGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/padding_normal"
+        />
+
+    <!-- Разделитель для текста описания -->
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/textsBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_tags="durationTitle, albumTittle, yearTittle, genreTittle, countryTittle"
+        app:barrierDirection="end" />
+
+    <!-- Toolbar "Назад" -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@+id/rightGuideline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/back"
+        style="@style/BaseToolbar"
+     />
+
+    <!-- Область для отображения обложки -->
+    <ImageView
+        android:id="@+id/albumArt"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+        app:layout_constraintBottom_toTopOf="@id/trackName"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"/>
+
+    <!-- Название трека -->
+    <TextView
+        android:id="@+id/trackName"
+        style="@style/PlayerTrackName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:text="Yesterday (Remastered 2009)"
+        app:layout_constraintBottom_toTopOf="@id/artistName"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center_horizontal" />
+
+    <!-- Имя исполнителя -->
+    <TextView
+        android:id="@+id/artistName"
+        style="@style/PlayerTrackArtist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        tools:text="The Beatles"
+        app:layout_constraintBottom_toTopOf="@id/playPauseButton"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_horizontal" />
+
+
+    <!-- Кнопка добавления в плейлист -->
+    <ImageButton
+        android:id="@+id/addToPlaylistButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/PlayerAddToPlaylistButton"
+        app:layout_constraintTop_toTopOf="@id/playPauseButton"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintBottom_toBottomOf="@id/playPauseButton"
+    />
+
+    <!-- Кнопка воспроизведения/паузы -->
+    <ImageButton
+        android:id="@+id/playPauseButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/PlayerPlayButton"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+        app:layout_constraintBottom_toTopOf="@id/trackTime"
+        android:layout_marginTop="30dp"
+        />
+
+    <!-- Кнопка добавления в избранное -->
+    <ImageButton
+        android:id="@+id/addToFavoritesButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/PlayerAddToFavoritesButton"
+        app:layout_constraintTop_toTopOf="@id/playPauseButton"
+        app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+        app:layout_constraintBottom_toBottomOf="@id/playPauseButton"
+    />
+
+    <!-- Продолжительность трека -->
+    <TextView
+        android:id="@+id/trackTime"
+        style="@style/PlayerTrackTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        tools:text="2:05"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+        app:layout_constraintBottom_toTopOf="@id/durationContent"
+        android:layout_marginBottom="30dp"
+        />
+
+    <!-- Длительность-->
+    <TextView
+        android:id="@+id/durationTitle"
+        app:layout_constraintTag="durationTitle"
+        style="@style/PlayerTittle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/player_duration"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintBottom_toTopOf="@id/albumContent"
+        android:layout_marginTop="16dp"
+    />
+
+    <!-- Длительность "Значение" -->
+    <TextView
+        android:id="@+id/durationContent"
+        style="@style/PlayerContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="2:20"
+        app:layout_constraintBottom_toTopOf="@id/albumContent"
+        app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+        app:layout_constraintStart_toEndOf="@+id/textsBarrier"
+        android:layout_alignBaseline="@id/durationTitle"
+        android:gravity="end"
+        android:maxLines="2"
+        android:layout_marginTop="16dp"
+    />
+
+    <!-- Альбом-->
+    <TextView
+        android:id="@+id/albumTittle"
+        app:layout_constraintTag="albumTittle"
+        style="@style/PlayerTittle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/player_album"
+        app:layout_constraintBottom_toTopOf="@id/yearContent"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        />
+
+    <!-- Альбом "Значение" -->
+    <TextView
+        android:id="@+id/albumContent"
+        style="@style/PlayerContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="Yesterday (Remastered 2009)"
+        android:gravity="end"
+        app:layout_constraintBottom_toTopOf="@id/yearContent"
+        app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+        android:layout_alignBaseline="@id/albumTittle"
+        app:layout_constraintStart_toEndOf="@+id/textsBarrier"
+        android:maxLines="1"
+        />
+
+    <!-- Год -->
+    <TextView
+        android:id="@+id/yearTittle"
+        app:layout_constraintTag="yearTittle"
+        style="@style/PlayerTittle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/player_year"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintBottom_toTopOf="@id/genreContent"
+    />
+
+    <!-- Год "Значение" -->
+    <TextView
+        android:id="@+id/yearContent"
+        style="@style/PlayerContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:text="1965"
+        android:gravity="end"
+        android:maxLines="1"
+        app:layout_constraintBottom_toTopOf="@id/genreContent"
+        app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+        app:layout_constraintStart_toEndOf="@+id/textsBarrier"
+        android:layout_alignBaseline="@id/yearTittle"
+    />
+
+
+    <!-- Жанр -->
+    <TextView
+        android:id="@+id/genreTittle"
+        app:layout_constraintTag="genreTittle"
+        style="@style/PlayerTittle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/player_genre"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintBottom_toTopOf="@id/countryContent"
+    />
+
+    <!-- Жанр "Значение" -->
+    <TextView
+        android:id="@+id/genreContent"
+        style="@style/PlayerContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:maxLines="1"
+        tools:text="Rock"
+        app:layout_constraintStart_toEndOf="@+id/textsBarrier"
+        app:layout_constraintBottom_toTopOf="@id/countryContent"
+        app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+        android:layout_alignBaseline="@id/genreTittle"
+        />
+
+    <!-- Страна -->
+    <TextView
+        android:id="@+id/countryTittle"
+        app:layout_constraintTag="countryTittle"
+        style="@style/PlayerTittle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/player_country"
+        app:layout_constraintStart_toStartOf="@id/leftGuideline"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
+        />
+
+    <!-- Страна "Значение" -->
+    <TextView
+        android:id="@+id/countryContent"
+        style="@style/PlayerContent"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="Великобритания"
+        android:gravity="end"
+        android:maxLines="1"
+        app:layout_constraintStart_toEndOf="@id/textsBarrier"
+        app:layout_constraintEnd_toStartOf="@id/rightGuideline"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
