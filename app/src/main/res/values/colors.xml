@@ -5,6 +5,7 @@
     <color name="blue">#3772E7</color>
     <color name="background_night">#1A1B22</color>
     <color name="background_input">#E6E8EB</color>
+    <color name="shadow">#6200EE</color>
     <color name="setting_icon_color">#AEAFB4</color>
     <color name="icon_clear_color">#AEAFB4</color>
     <color name="input_tint_color">#818C99</color>
