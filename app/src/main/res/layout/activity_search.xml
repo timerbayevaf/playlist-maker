@@ -9,7 +9,7 @@
     android:orientation="vertical"
     android:paddingTop="14dp"
     android:paddingBottom="40dp"
-    tools:context=".SearchActivity"
+    tools:context=".ui.search.SearchActivity"
     tools:ignore="ScrollViewSize">
 
     <androidx.appcompat.widget.Toolbar

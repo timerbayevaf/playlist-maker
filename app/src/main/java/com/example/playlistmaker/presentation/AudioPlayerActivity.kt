@@ -1,6 +1,5 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.presentation
 
-import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -14,20 +13,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.App
 import com.example.playlistmaker.App.Companion.getFormattedTrackTime
-import com.example.playlistmaker.track.Track
+import com.example.playlistmaker.Creator
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.AudioPlayerInteractor
+import com.example.playlistmaker.domain.models.PlayerState
+import com.example.playlistmaker.domain.models.Track
 
-class PlayerActivity : AppCompatActivity() {
+class AudioPlayerActivity : AppCompatActivity() {
   companion object {
     private const val TAG = "PlayerActivity"
     private const val DELAY = 1000L
   }
 
-  private enum class PlayerState {
-    DEFAULT, PREPARED, PLAYING, PAUSED
-  }
-
-  private var playerState = PlayerState.DEFAULT
   private lateinit var play: ImageButton
   private lateinit var trackTime: TextView
   private lateinit var imagePlayer: ImageView
@@ -39,7 +38,8 @@ class PlayerActivity : AppCompatActivity() {
   private lateinit var yearContent: TextView
   private lateinit var genreContent: TextView
   private lateinit var countryContent: TextView
-  private lateinit var mediaPlayer: MediaPlayer
+
+  private val audioPlayerInteractor: AudioPlayerInteractor = Creator.provideAudioPlayerInteractor()
   private val handler = Handler(Looper.getMainLooper())
   private lateinit var updateTimerRunnable: Runnable
 
@@ -49,7 +49,6 @@ class PlayerActivity : AppCompatActivity() {
 
     initViews()
     setupToolbar()
-    mediaPlayer = MediaPlayer()
     updateTimerRunnable = createUpdateTimerRunnable()
 
     // Отключаем кнопку до подготовки
@@ -142,55 +141,38 @@ class PlayerActivity : AppCompatActivity() {
 
 
   private fun preparePlayer(url: String) {
-    try {
-      mediaPlayer.apply {
-        setDataSource(url)
-        prepareAsync()
-        setOnPreparedListener {
+    audioPlayerInteractor.preparePlayer(url) {state ->
+      when (state) {
+        PlayerState.PREPARED -> {
           play.isEnabled = true
-          playerState = PlayerState.PREPARED
+          handler.post(updateTimerRunnable)
+//          trackTime.setText(getString(R.string.player_default_time))
         }
-        setOnCompletionListener {
-          setPlayPauseIcon(false)
-          trackTime.setText(getString(R.string.player_default_time))
-          playerState = PlayerState.PREPARED
-          handler.removeCallbacks(updateTimerRunnable)
-        }
-        setOnErrorListener { _, what, extra ->
-          Log.e(TAG, "MediaPlayer error: what=$what extra=$extra")
-          true
-        }
+        else -> Unit
       }
-    } catch (e: Exception) {
-      Log.e(TAG, "MediaPlayer preparation failed", e)
+
     }
   }
 
   private fun startPlayer() {
-    try {
-      if (::mediaPlayer.isInitialized) {
-        mediaPlayer.start()
-        setPlayPauseIcon(true)
-        playerState = PlayerState.PLAYING
-        handler.post(updateTimerRunnable)
-        }
-    } catch (e:Exception) {
-      Log.e(TAG, "Playback start failed", e)
-    }
+    audioPlayerInteractor.startPlayer()
+    setPlayPauseIcon(true)
+    handler.post(updateTimerRunnable)
   }
 
   private fun pausePlayer() {
-    mediaPlayer.pause()
+    audioPlayerInteractor.pausePlayer()
     setPlayPauseIcon(false)
-    playerState = PlayerState.PAUSED
     handler.removeCallbacks(updateTimerRunnable)
   }
 
   private fun playbackControl() {
-    when (playerState) {
-      PlayerState.PLAYING -> pausePlayer()
-      PlayerState.PREPARED, PlayerState.PAUSED -> startPlayer()
-      else -> Log.w(TAG, "Playback control in invalid state: $playerState")
+    audioPlayerInteractor.switchedStatePlayer { state ->
+      when (state) {
+        PlayerState.PLAYING -> startPlayer()
+        PlayerState.PAUSED -> pausePlayer()
+        else -> Unit
+      }
     }
   }
 
@@ -208,8 +190,7 @@ class PlayerActivity : AppCompatActivity() {
   private fun createUpdateTimerRunnable(): Runnable {
     return object : Runnable {
       override fun run() {
-        trackTime.text =
-          getFormattedTrackTime(mediaPlayer.currentPosition.toLong())
+        trackTime.text = getFormattedTrackTime(audioPlayerInteractor.getPosition())
         handler.postDelayed(this, DELAY)
       }
     }
@@ -218,14 +199,12 @@ class PlayerActivity : AppCompatActivity() {
 
   override fun onPause() {
     super.onPause()
-    if (playerState == PlayerState.PLAYING) {
-      pausePlayer()
-    }
+    handler.removeCallbacks(updateTimerRunnable)
   }
 
   override fun onDestroy() {
     super.onDestroy()
     handler.removeCallbacks(updateTimerRunnable)
-    mediaPlayer.release()
+    audioPlayerInteractor.stopPlayer()
   }
 }
