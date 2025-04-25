@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -27,10 +29,13 @@ import retrofit2.Callback
 import retrofit2.Call
 import retrofit2.Response
 import android.util.Log
+import android.widget.ProgressBar
 
 class SearchActivity : AppCompatActivity() {
   companion object {
     const val ITUNES_BASE_URL = "https://itunes.apple.com"
+    private const val CLICK_DEBOUNCE_DELAY = 1000L
+    private const val SEARCH_DEBOUNCE_DELAY = 2000L
   }
 
   private val retrofit = Retrofit.Builder()
@@ -52,8 +57,14 @@ class SearchActivity : AppCompatActivity() {
   private lateinit var updateButton: Button
   private lateinit var searchHistoryTitle: TextView
   private lateinit var searchHistoryClearButton: Button
+  private lateinit var progressBar: ProgressBar
   private val imm by lazy { getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager }
   private var searchQuery: String = ""
+
+  // Debounce
+  private var isClickAllowed = true
+  private val handler = Handler(Looper.getMainLooper())
+  private val searchRunnable = Runnable { performSearch() }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -74,6 +85,8 @@ class SearchActivity : AppCompatActivity() {
     searchHistoryTitle = findViewById(R.id.search_history_title)
     searchHistoryClearButton = findViewById(R.id.search_history_clear_button)
 
+    progressBar = findViewById(R.id.progress_bar)
+
     val toolbar = findViewById<Toolbar>(R.id.toolbar)
     toolbar.setNavigationOnClickListener {
       finish()
@@ -93,7 +106,16 @@ class SearchActivity : AppCompatActivity() {
 
     setupSearchFieldBehavior()
 
-    trackAdapter = TrackAdapter()
+    trackAdapter = TrackAdapter {
+      SearchHistory.addTrackInHistoryList(it)
+      if (clickDebounce()) {
+        // Создаем Intent для перехода на PlayerActivity
+        val intent = Intent(this, PlayerActivity::class.java)
+          .apply { putExtra(Track.TRACK, it) }
+        startActivity(intent)
+      }
+    }
+
     val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
     recyclerView.adapter = trackAdapter
     trackAdapter!!.trackList = trackList
@@ -104,7 +126,7 @@ class SearchActivity : AppCompatActivity() {
     }
   }
 
-  private fun showMessage(text: String, additionalMessage: String) {
+  private fun showMessage(text: String, isNetworkError: Boolean) {
     if (text.isNotEmpty()) {
       placeholder.visibility = View.VISIBLE
       placeholderNoConnection.visibility = View.GONE
@@ -113,7 +135,7 @@ class SearchActivity : AppCompatActivity() {
       trackAdapter?.notifyDataSetChanged()
       placeholderError.text = text
 
-      if (additionalMessage.isNotEmpty()) {
+      if (isNetworkError) {
         placeholderNothingFound.visibility = View.GONE
         placeholderNoConnection.visibility = View.VISIBLE
         updateButton.visibility = View.VISIBLE
@@ -130,6 +152,7 @@ class SearchActivity : AppCompatActivity() {
       override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
       override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+        searchDebounce()
         searchQuery = s?.toString() ?: ""
         updateVisibility(s)
       }
@@ -217,28 +240,32 @@ class SearchActivity : AppCompatActivity() {
     Log.d("Search", "Search: $searchQuery")
 
     if (searchQuery.isNotEmpty()) {
+      progressBar.visibility = View.VISIBLE
+      placeholder.visibility = View.GONE
+      setGoneHistoryElement()
 
       itunesService.search(searchQuery).enqueue(object : Callback<TrackResponse> {
         override fun onResponse(call: Call<TrackResponse>,
                                 response: Response<TrackResponse>
         ) {
           if (response.code() == 200) {
+            progressBar.visibility = View.GONE
             trackList.clear()
             response.body()?.results?.let { results ->
               if (results.isNotEmpty()) {
                 trackList.addAll(results)
                 trackAdapter?.notifyDataSetChanged()
               } else {
-                showMessage(getString(R.string.nothing_found), "")
+                showMessage(getString(R.string.nothing_found), false)
               }
             }
           } else {
-            showMessage(getString(R.string.something_went_wrong), response.code().toString())
+            showMessage(getString(R.string.something_went_wrong), true)
           }
         }
 
         override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-          showMessage(getString(R.string.something_went_wrong), t.message.toString())
+          showMessage(getString(R.string.something_went_wrong), true)
         }
 
       })
@@ -258,5 +285,19 @@ class SearchActivity : AppCompatActivity() {
     if (searchQuery.isEmpty() && searchEditText.hasFocus() && historyTrackList.isNotEmpty()) {
       showHistory()
     }
+  }
+
+  private fun clickDebounce() : Boolean {
+    val current = isClickAllowed
+    if (isClickAllowed) {
+      isClickAllowed = false
+      handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+    }
+    return current
+  }
+
+  private fun searchDebounce() {
+    handler.removeCallbacks(searchRunnable)
+    handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)
   }
 }

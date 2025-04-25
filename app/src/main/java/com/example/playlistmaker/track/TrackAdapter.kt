@@ -1,12 +1,10 @@
 package com.example.playlistmaker.track
 
-import android.content.Intent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.PlayerActivity
 import com.example.playlistmaker.SearchHistory.addTrackInHistoryList
 
-class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
+class TrackAdapter(val clickListener: TrackClickListener):  RecyclerView.Adapter<TrackViewHolder>() {
   var trackList = ArrayList<Track>()
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder = TrackViewHolder(parent)
 
@@ -15,12 +13,13 @@ class TrackAdapter : RecyclerView.Adapter<TrackViewHolder>() {
     holder.itemView.setOnClickListener {
       addTrackInHistoryList(trackList[position])
 
-      // Создаем Intent для перехода на PlayerActivity
-      val intent = Intent(it.context, PlayerActivity::class.java)
-      intent.putExtra(Track.TRACK, trackList[position])
-      it.context.startActivity(intent)
+      clickListener.onTrackClick(trackList[position])
     }
   }
 
   override fun getItemCount(): Int = trackList.size
+
+  fun interface TrackClickListener {
+    fun onTrackClick(movie: Track)
+  }
 }
