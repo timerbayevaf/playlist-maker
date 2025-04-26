@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.App
 import com.example.playlistmaker.App.Companion.getFormattedTrackTime
-import com.example.playlistmaker.Creator
+import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.domain.models.PlayerState
@@ -146,7 +146,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         PlayerState.PREPARED -> {
           play.isEnabled = true
           handler.post(updateTimerRunnable)
-//          trackTime.setText(getString(R.string.player_default_time))
+          trackTime.setText(getString(R.string.player_default_time))
         }
         else -> Unit
       }
