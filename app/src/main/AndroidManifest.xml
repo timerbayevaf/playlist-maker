@@ -21,7 +21,7 @@
             android:name=".ui.search.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.AudioPlayerActivity"
+            android:name=".ui.audioplayer.AudioPlayerActivity"
             android:exported="false"/>
 
         <activity

@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation
+package com.example.playlistmaker.ui.audioplayer
 
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +18,7 @@ import com.example.playlistmaker.App.Companion.getFormattedTrackTime
 import com.example.playlistmaker.util.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.api.AudioPlayerInteractor
+import com.example.playlistmaker.domain.api.SettingsInteractor
 import com.example.playlistmaker.domain.models.PlayerState
 import com.example.playlistmaker.domain.models.Track
 
@@ -26,6 +27,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private const val TAG = "PlayerActivity"
     private const val DELAY = 1000L
   }
+  private lateinit var settingsInteractor: SettingsInteractor
 
   private lateinit var play: ImageButton
   private lateinit var trackTime: TextView
@@ -46,6 +48,7 @@ class AudioPlayerActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_player)
+    settingsInteractor = Creator.provideSettingsInteractor(applicationContext)
 
     initViews()
     setupToolbar()
@@ -146,7 +149,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         PlayerState.PREPARED -> {
           play.isEnabled = true
           handler.post(updateTimerRunnable)
-          trackTime.setText(getString(R.string.player_default_time))
+          setPlayPauseIcon(false)
         }
         else -> Unit
       }
@@ -177,7 +180,7 @@ class AudioPlayerActivity : AppCompatActivity() {
   }
 
   private fun setPlayPauseIcon(isPlaying: Boolean) {
-    val isDarkTheme = (applicationContext as App).darkTheme
+    val isDarkTheme = settingsInteractor.getDarkThemeState()
     val iconRes = when {
       isPlaying && !isDarkTheme -> R.drawable.pause_light
       isPlaying -> R.drawable.pause_night
@@ -195,7 +198,6 @@ class AudioPlayerActivity : AppCompatActivity() {
       }
     }
   }
-
 
   override fun onPause() {
     super.onPause()

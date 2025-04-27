@@ -8,13 +8,17 @@ import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.SettingsInteractor
+import com.example.playlistmaker.util.Creator
 import com.google.android.material.switchmaterial.SwitchMaterial
 
 class SettingsActivity : AppCompatActivity() {
+  private lateinit var settingsInteractor: SettingsInteractor
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_settings)
+    settingsInteractor = Creator.provideSettingsInteractor(applicationContext)
 
     val themeSwitcher = findViewById<SwitchMaterial>(R.id.switchTheme)
     val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -38,11 +42,9 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     // Настройка switch "Темная тема"
+    themeSwitcher.isChecked = settingsInteractor.getDarkThemeState()
     themeSwitcher.setOnCheckedChangeListener { _, checked ->
-      (applicationContext as App).switchTheme(checked)
-    }
-    if ((applicationContext as App).darkTheme) {
-      themeSwitcher.isChecked = true
+      (application as? App)?.setAppTheme(checked)
     }
   }
 

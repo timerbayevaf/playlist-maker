@@ -1,14 +1,15 @@
-package com.example.playlistmaker.domain.impl
+package com.example.playlistmaker.data
 
 import android.media.MediaPlayer
 import com.example.playlistmaker.domain.api.AudioPlayerRepository
 import com.example.playlistmaker.domain.models.PlayerState
 
-class AudioPlayerRepositoryImpl : AudioPlayerRepository {
-  private var mediaPlayer = MediaPlayer()
+class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPlayerRepository {
   private var playerState = PlayerState.DEFAULT
-  override fun prepare(url: String, onChangeState: (s: PlayerState) -> Unit) {
+  private var onChangeState: ((PlayerState) -> Unit)? = null
 
+  override fun prepare(url: String, onChangeState: (s: PlayerState) -> Unit) {
+    this.onChangeState = onChangeState
     mediaPlayer.apply {
       setDataSource(url)
       prepareAsync()
@@ -19,6 +20,7 @@ class AudioPlayerRepositoryImpl : AudioPlayerRepository {
       setOnCompletionListener {
         playerState = PlayerState.PREPARED
         onChangeState(PlayerState.PREPARED)
+        mediaPlayer.seekTo(0)
       }
     }
   }

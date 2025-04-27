@@ -19,19 +19,14 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.Callback
-import retrofit2.Call
-import retrofit2.Response
 import android.util.Log
 import android.widget.ProgressBar
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.dto.TracksSearchResponse
-import com.example.playlistmaker.data.network.TrackApi
+import com.example.playlistmaker.domain.api.TracksInteractor
 import com.example.playlistmaker.domain.models.Track
-import com.example.playlistmaker.presentation.AudioPlayerActivity
+import com.example.playlistmaker.ui.audioplayer.AudioPlayerActivity
 import com.example.playlistmaker.ui.tracks.TrackAdapter
+import com.example.playlistmaker.util.Creator
 
 class SearchActivity : AppCompatActivity() {
   companion object {
@@ -39,13 +34,8 @@ class SearchActivity : AppCompatActivity() {
     private const val CLICK_DEBOUNCE_DELAY = 1000L
     private const val SEARCH_DEBOUNCE_DELAY = 2000L
   }
+  private val tracksInteractor: TracksInteractor = Creator.provideTracksInteractor()
 
-  private val retrofit = Retrofit.Builder()
-    .baseUrl(ITUNES_BASE_URL)
-    .addConverterFactory(GsonConverterFactory.create())
-    .build()
-
-  private val itunesService = retrofit.create(TrackApi::class.java)
   private var trackList = ArrayList<Track>()
   private var historyTrackList = ArrayList<Track>()
   private var trackAdapter: TrackAdapter? = null
@@ -246,40 +236,19 @@ class SearchActivity : AppCompatActivity() {
       placeholder.visibility = View.GONE
       setGoneHistoryElement()
 
-      itunesService.search(searchQuery).enqueue(object : Callback<TracksSearchResponse> {
-        override fun onResponse(call: Call<TracksSearchResponse>,
-                                response: Response<TracksSearchResponse>
-        ) {
-          if (response.code() == 200) {
+      tracksInteractor.searchTracks(searchQuery, object : TracksInteractor.TracksConsumer {
+        override fun consume(foundTracks: List<Track>) {
+          handler.post {
             progressBar.visibility = View.GONE
             trackList.clear()
-            response.body()?.results?.let { results ->
-              if (results.isNotEmpty()) {
-                trackList.addAll(results.map {
-                  Track( it.trackId,
-                    it.trackName,
-                    it.artistName,
-                    it.trackTimeMillis,
-                    it.releaseDate,
-                    it.artworkUrl100,
-                    it.collectionName,
-                    it.primaryGenreName,
-                    it.country,
-                    it.previewUrl) })
-                trackAdapter?.notifyDataSetChanged()
-              } else {
-                showMessage(getString(R.string.nothing_found), false)
-              }
+            trackList.addAll(foundTracks)
+            trackAdapter?.notifyDataSetChanged()
+
+            if (trackList.isEmpty()) {
+              showMessage(getString(R.string.nothing_found), false)
             }
-          } else {
-            showMessage(getString(R.string.something_went_wrong), true)
           }
         }
-
-        override fun onFailure(call: Call<TracksSearchResponse>, t: Throwable) {
-          showMessage(getString(R.string.something_went_wrong), true)
-        }
-
       })
     }
   }
