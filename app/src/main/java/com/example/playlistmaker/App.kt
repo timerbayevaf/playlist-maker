@@ -1,39 +1,49 @@
 package com.example.playlistmaker
 
 import android.app.Application
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
+import com.example.playlistmaker.domain.api.SettingsInteractor
+import com.example.playlistmaker.util.Creator
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class App : Application() {
   companion object {
-    const val PREFERENCES = "practicum_example_preferences"
-    const val EDIT_TEXT_KEY = "EditTextKey"
-    lateinit var sharedPrefs: SharedPreferences
-    fun getFormattedTrackTime(millis : Long): String? =
-      SimpleDateFormat("mm:ss", Locale.getDefault()).format(millis)
+    private var instance: App? = null
+
+    fun getAppContext(): Context {
+      return instance?.applicationContext
+        ?: throw IllegalStateException("Application not initialized")
+    }
+
+    fun getFormattedTrackTime(millis: Long): String {
+      return SimpleDateFormat("mm:ss", Locale.getDefault()).format(millis)
+    }
   }
-  var darkTheme = false
+  private lateinit var settingsInteractor: SettingsInteractor
 
   override fun onCreate() {
     super.onCreate()
-    sharedPrefs = getSharedPreferences(PREFERENCES, MODE_PRIVATE)
-    darkTheme = sharedPrefs.getBoolean(EDIT_TEXT_KEY, false)
-    switchTheme(darkTheme)
+    instance = this
+
+    // Инициализация зависимостей
+    settingsInteractor = Creator.provideSettingsInteractor(this)
+
+    // Применение темы
+    applyTheme()
+  }
+  private fun applyTheme() {
+    val isDarkTheme = settingsInteractor.getDarkThemeState()
+    setAppTheme(isDarkTheme)
   }
 
-  fun switchTheme(darkThemeEnabled: Boolean) {
-    darkTheme = darkThemeEnabled
+  fun setAppTheme(isDark: Boolean) {
+    settingsInteractor.updateDarkThemeState(isDark)
     AppCompatDelegate.setDefaultNightMode(
-      if (darkThemeEnabled) {
-        AppCompatDelegate.MODE_NIGHT_YES
-      } else {
-        AppCompatDelegate.MODE_NIGHT_NO
-      }
+      if (isDark) AppCompatDelegate.MODE_NIGHT_YES
+      else AppCompatDelegate.MODE_NIGHT_NO
     )
-    sharedPrefs.edit()
-      .putBoolean(EDIT_TEXT_KEY, darkTheme)
-      .apply()
   }
 }

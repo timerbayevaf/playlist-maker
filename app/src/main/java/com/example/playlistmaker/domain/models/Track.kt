@@ -1,9 +1,7 @@
-package com.example.playlistmaker.track
+package com.example.playlistmaker.domain.models
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 @Parcelize
 data class Track (

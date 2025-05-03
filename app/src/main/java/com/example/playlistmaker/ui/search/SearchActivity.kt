@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.search
 
 import android.content.Context
 import android.content.Intent
@@ -19,17 +19,14 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.track.Track
-import com.example.playlistmaker.track.TrackAdapter
-import com.example.playlistmaker.track.TrackApi
-import com.example.playlistmaker.track.TrackResponse
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.Callback
-import retrofit2.Call
-import retrofit2.Response
 import android.util.Log
 import android.widget.ProgressBar
+import com.example.playlistmaker.R
+import com.example.playlistmaker.domain.api.TracksInteractor
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.ui.audioplayer.AudioPlayerActivity
+import com.example.playlistmaker.ui.tracks.TrackAdapter
+import com.example.playlistmaker.util.Creator
 
 class SearchActivity : AppCompatActivity() {
   companion object {
@@ -37,13 +34,8 @@ class SearchActivity : AppCompatActivity() {
     private const val CLICK_DEBOUNCE_DELAY = 1000L
     private const val SEARCH_DEBOUNCE_DELAY = 2000L
   }
+  private val tracksInteractor: TracksInteractor = Creator.provideTracksInteractor()
 
-  private val retrofit = Retrofit.Builder()
-    .baseUrl(ITUNES_BASE_URL)
-    .addConverterFactory(GsonConverterFactory.create())
-    .build()
-
-  private val itunesService = retrofit.create(TrackApi::class.java)
   private var trackList = ArrayList<Track>()
   private var historyTrackList = ArrayList<Track>()
   private var trackAdapter: TrackAdapter? = null
@@ -110,7 +102,7 @@ class SearchActivity : AppCompatActivity() {
       SearchHistory.addTrackInHistoryList(it)
       if (clickDebounce()) {
         // Создаем Intent для перехода на PlayerActivity
-        val intent = Intent(this, PlayerActivity::class.java)
+        val intent = Intent(this, AudioPlayerActivity::class.java)
           .apply { putExtra(Track.TRACK, it) }
         startActivity(intent)
       }
@@ -244,30 +236,19 @@ class SearchActivity : AppCompatActivity() {
       placeholder.visibility = View.GONE
       setGoneHistoryElement()
 
-      itunesService.search(searchQuery).enqueue(object : Callback<TrackResponse> {
-        override fun onResponse(call: Call<TrackResponse>,
-                                response: Response<TrackResponse>
-        ) {
-          if (response.code() == 200) {
+      tracksInteractor.searchTracks(searchQuery, object : TracksInteractor.TracksConsumer {
+        override fun consume(foundTracks: List<Track>) {
+          handler.post {
             progressBar.visibility = View.GONE
             trackList.clear()
-            response.body()?.results?.let { results ->
-              if (results.isNotEmpty()) {
-                trackList.addAll(results)
-                trackAdapter?.notifyDataSetChanged()
-              } else {
-                showMessage(getString(R.string.nothing_found), false)
-              }
+            trackList.addAll(foundTracks)
+            trackAdapter?.notifyDataSetChanged()
+
+            if (trackList.isEmpty()) {
+              showMessage(getString(R.string.nothing_found), false)
             }
-          } else {
-            showMessage(getString(R.string.something_went_wrong), true)
           }
         }
-
-        override fun onFailure(call: Call<TrackResponse>, t: Throwable) {
-          showMessage(getString(R.string.something_went_wrong), true)
-        }
-
       })
     }
   }
