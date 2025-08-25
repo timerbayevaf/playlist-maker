@@ -1,12 +1,12 @@
-package com.example.playlistmaker.tracks.data
+package com.example.playlistmaker.search.data
 
-import com.example.playlistmaker.search.data.NetworkClient
+import com.bumptech.glide.load.engine.Resource
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import com.example.playlistmaker.search.data.dto.TracksSearchResponse
-import com.example.playlistmaker.tracks.domain.api.TracksRepository
-import com.example.playlistmaker.tracks.domain.models.Track
+import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
+import com.example.playlistmaker.search.domain.models.Track
 
-class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRepository {
+class SearchRepositoryImpl(private val networkClient: NetworkClient,private val storage: SearchHistoryStorage) : SearchHistoryRepository {
   override fun searchTracks(expression: String): List<Track> {
     val response = networkClient.doRequest(TracksSearchRequest(expression))
     if (response.resultCode == 200) {
@@ -24,5 +24,17 @@ class TracksRepositoryImpl(private val networkClient: NetworkClient) : TracksRep
     } else {
       return emptyList()
     }
+  }
+
+  override fun saveToHistory(track: Track) {
+    storage.saveToHistory(track)
+  }
+
+  override fun getHistory(): List<Track> {
+    return storage.getHistory()
+  }
+
+  override fun clearHistory() {
+    storage.clearHistoryList()
   }
 }

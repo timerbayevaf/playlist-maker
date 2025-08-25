@@ -80,7 +80,7 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         tools:text="The Beatles"
-        app:layout_constraintBottom_toTopOf="@id/play_pause_button"
+        app:layout_constraintBottom_toTopOf="@id/playOrPause"
         app:layout_constraintStart_toStartOf="@id/leftGuideline"
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"
         android:layout_marginTop="8dp"
@@ -90,18 +90,18 @@
 
     <!-- Кнопка добавления в плейлист -->
     <ImageButton
-        android:id="@+id/add_to_playlist_button"
+        android:id="@+id/addToPlaylist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/PlayerAddToPlaylistButton"
-        app:layout_constraintTop_toTopOf="@id/play_pause_button"
+        app:layout_constraintTop_toTopOf="@id/playOrPause"
         app:layout_constraintStart_toStartOf="@id/leftGuideline"
-        app:layout_constraintBottom_toBottomOf="@id/play_pause_button"
+        app:layout_constraintBottom_toBottomOf="@id/playOrPause"
     />
 
     <!-- Кнопка воспроизведения/паузы -->
     <ImageButton
-        android:id="@+id/play_pause_button"
+        android:id="@+id/playOrPause"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/PlayerPlayButton"
@@ -113,13 +113,13 @@
 
     <!-- Кнопка добавления в избранное -->
     <ImageButton
-        android:id="@+id/add_to_favorites_button"
+        android:id="@+id/addToFavorites"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/PlayerAddToFavoritesButton"
-        app:layout_constraintTop_toTopOf="@id/play_pause_button"
+        app:layout_constraintTop_toTopOf="@id/playOrPause"
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"
-        app:layout_constraintBottom_toBottomOf="@id/play_pause_button"
+        app:layout_constraintBottom_toBottomOf="@id/playOrPause"
     />
 
     <!-- Продолжительность трека -->

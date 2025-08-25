@@ -2,85 +2,66 @@ package com.example.playlistmaker.audioplayer.ui
 
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.App.Companion.getFormattedTrackTime
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.audioplayer.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.audioplayer.domain.models.PlayerState
-import com.example.playlistmaker.tracks.domain.models.Track
+import com.example.playlistmaker.databinding.ActivityPlayerBinding
+import com.example.playlistmaker.search.domain.models.Track
 
 class AudioPlayerActivity : AppCompatActivity() {
   companion object {
     private const val TAG = "PlayerActivity"
-    private const val DELAY = 1000L
   }
   private lateinit var settingsInteractor: SettingsInteractor
-
-  private lateinit var play: ImageButton
-  private lateinit var trackTime: TextView
-  private lateinit var imagePlayer: ImageView
-  private lateinit var trackName: TextView
-  private lateinit var artistName: TextView
-  private lateinit var albumContent: TextView
-  private lateinit var albumTittle: TextView
-  private lateinit var durationContent: TextView
-  private lateinit var yearContent: TextView
-  private lateinit var genreContent: TextView
-  private lateinit var countryContent: TextView
-
-  private val audioPlayerInteractor: AudioPlayerInteractor = Creator.provideAudioPlayerInteractor()
-  private val handler = Handler(Looper.getMainLooper())
-  private lateinit var updateTimerRunnable: Runnable
+  private lateinit var viewModel: AudioPlayerViewModel
+  private lateinit var binding: ActivityPlayerBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_player)
+    binding = ActivityPlayerBinding.inflate(layoutInflater)
+    setContentView(binding.root)
+
     settingsInteractor = Creator.provideSettingsInteractor(applicationContext)
 
-    initViews()
     setupToolbar()
-    updateTimerRunnable = createUpdateTimerRunnable()
 
-    // Отключаем кнопку до подготовки
-    play.isEnabled = false
+    viewModel = ViewModelProvider(
+      this, AudioPlayerViewModel.getViewModelFactory()
+    )[AudioPlayerViewModel::class.java]
 
     val track = getTrackFromIntent()
     track?.let { setupTrackViews(it) } ?: run {
       Log.e(TAG, "Track data not available")
       finish()
     }
-  }
 
-  private fun initViews() {
-    play = findViewById(R.id.play_pause_button)
-    trackTime = findViewById(R.id.trackTime)
-    imagePlayer = findViewById(R.id.albumArt)
-    trackName = findViewById(R.id.trackName)
-    artistName = findViewById(R.id.artistName)
-    albumContent = findViewById(R.id.albumContent)
-    albumTittle = findViewById(R.id.albumTittle)
-    durationContent = findViewById(R.id.durationContent)
-    yearContent = findViewById(R.id.yearContent)
-    genreContent = findViewById(R.id.genreContent)
-    countryContent = findViewById(R.id.countryContent)
-  }
+    viewModel.getStatePlayerLiveData().observe(this) {state ->
+      when(state) {
+        PlayerState.PAUSED -> setPlayPauseIcon(false)
+        PlayerState.PLAYING -> setPlayPauseIcon(true)
+        PlayerState.PREPARED, PlayerState.DEFAULT -> {
+          setPlayPauseIcon(false)
+          binding.trackTime.text = getString(R.string.player_default_time)
+        }
+      }
+    }
 
+    viewModel.getCurrentTimeLiveData().observe(this) { time ->
+      binding.trackTime.text = getFormattedTrackTime(time)
+    }
+
+  }
 
   private fun setupToolbar() {
-    val toolbar = findViewById<Toolbar>(R.id.toolbar)
-    toolbar.setNavigationOnClickListener {
+    binding.toolbar.setNavigationOnClickListener {
       finish()
     }
   }
@@ -97,13 +78,15 @@ class AudioPlayerActivity : AppCompatActivity() {
 
   private fun setupTrackViews(track: Track) {
     // настройка текста
-    trackTime.text = getText(R.string.player_default_time)
-    trackName.text = track.trackName
-    artistName.text = track.artistName
-    durationContent.text = getFormattedTrackTime(track.trackTimeMillis)
-    yearContent.text = track.getFormattedReleaseYear()
-    genreContent.text = track.primaryGenreName
-    countryContent.text = track.country
+    binding.apply {
+      trackTime.text = getText(R.string.player_default_time)
+      trackName.text = track.trackName
+      artistName.text = track.artistName
+      durationContent.text = getFormattedTrackTime(track.trackTimeMillis)
+      yearContent.text = track.getFormattedReleaseYear()
+      genreContent.text = track.primaryGenreName
+      countryContent.text = track.country
+    }
 
     setupAlbumInfo(track.collectionName)
     // Загрузка обложки
@@ -111,24 +94,28 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     // Подготовка плеера
     track.previewUrl?.takeIf { it.isNotEmpty() }?.let { url ->
-      preparePlayer(url)
+      viewModel.preparePlayer(url)
     } ?: run {
-      play.isEnabled = false
+      binding.playOrPause.isEnabled = false
       Log.e(TAG,"Preview not available")
     }
-    play.setOnClickListener {
-      playbackControl()
+    binding.playOrPause.setOnClickListener {
+      viewModel.changePlayerState()
     }
   }
 
   private fun setupAlbumInfo(collectionName: String?) {
     if (collectionName.isNullOrEmpty()) {
-      albumContent.visibility = View.GONE
-      albumTittle.visibility = View.GONE
+      binding.apply {
+        albumContent.visibility = View.GONE
+        albumTittle.visibility = View.GONE
+      }
     } else {
-      albumContent.text = collectionName
-      albumContent.visibility = View.VISIBLE
-      albumTittle.visibility = View.VISIBLE
+      binding.apply {
+        albumContent.text = collectionName
+        albumContent.visibility = View.VISIBLE
+        albumTittle.visibility = View.VISIBLE
+      }
     }
   }
 
@@ -138,45 +125,9 @@ class AudioPlayerActivity : AppCompatActivity() {
       .placeholder(R.drawable.track_palceholder)
       .centerCrop()
       .transform(RoundedCorners(2))
-      .into(imagePlayer)
+      .into(binding.albumArt)
   }
 
-
-  private fun preparePlayer(url: String) {
-    audioPlayerInteractor.preparePlayer(url) {state ->
-      when (state) {
-        PlayerState.PREPARED -> {
-          play.isEnabled = true
-          handler.post(updateTimerRunnable)
-          setPlayPauseIcon(false)
-        }
-        else -> Unit
-      }
-
-    }
-  }
-
-  private fun startPlayer() {
-    audioPlayerInteractor.startPlayer()
-    setPlayPauseIcon(true)
-    handler.post(updateTimerRunnable)
-  }
-
-  private fun pausePlayer() {
-    audioPlayerInteractor.pausePlayer()
-    setPlayPauseIcon(false)
-    handler.removeCallbacks(updateTimerRunnable)
-  }
-
-  private fun playbackControl() {
-    audioPlayerInteractor.switchedStatePlayer { state ->
-      when (state) {
-        PlayerState.PLAYING -> startPlayer()
-        PlayerState.PAUSED -> pausePlayer()
-        else -> Unit
-      }
-    }
-  }
 
   private fun setPlayPauseIcon(isPlaying: Boolean) {
     val isDarkTheme = settingsInteractor.getDarkThemeState()
@@ -186,26 +137,25 @@ class AudioPlayerActivity : AppCompatActivity() {
       !isDarkTheme -> R.drawable.play_light
       else -> R.drawable.play_night
     }
-    play.setImageResource(iconRes)
+    binding.playOrPause.setImageResource(iconRes)
   }
 
-  private fun createUpdateTimerRunnable(): Runnable {
-    return object : Runnable {
-      override fun run() {
-        trackTime.text = getFormattedTrackTime(audioPlayerInteractor.getPosition())
-        handler.postDelayed(this, DELAY)
-      }
-    }
+  override fun onStart() {
+    super.onStart()
+    viewModel.onStart()
   }
 
   override fun onPause() {
     super.onPause()
-    handler.removeCallbacks(updateTimerRunnable)
+    viewModel.onPause()
   }
 
   override fun onDestroy() {
     super.onDestroy()
-    handler.removeCallbacks(updateTimerRunnable)
-    audioPlayerInteractor.stopPlayer()
+    viewModel.onDestroy()
+  }
+  override fun onResume() {
+    super.onResume()
+    viewModel.onResume()
   }
 }

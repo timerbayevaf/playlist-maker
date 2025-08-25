@@ -3,48 +3,45 @@ package com.example.playlistmaker.settings.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
 import androidx.appcompat.app.AppCompatActivity
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.creator.Creator
-import com.google.android.material.switchmaterial.SwitchMaterial
+import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
   private lateinit var settingsInteractor: SettingsInteractor
+  private lateinit var binding: ActivitySettingsBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_settings)
+    binding = ActivitySettingsBinding.inflate(layoutInflater)
+    setContentView(binding.root)
     settingsInteractor = Creator.provideSettingsInteractor(applicationContext)
 
-    val themeSwitcher = findViewById<SwitchMaterial>(R.id.switchTheme)
-    val toolbar = findViewById<Toolbar>(R.id.toolbar)
-    toolbar.setNavigationOnClickListener {
-      finish()
-    }
 
-    // Обработчик нажатия на кнопку «Поделиться»
-    findViewById<TextView>(R.id.share_button).setOnClickListener {
-      shareAppLink()
-    }
-
-    // Обработчик нажатия на кнопку «Написать в поддержку»
-    findViewById<TextView>(R.id.support_button).setOnClickListener {
-      sendSupportEmail()
-    }
-
-    // Обработчик нажатия на кнопку «Пользовательское соглашение»
-    findViewById<TextView>(R.id.user_agreement).setOnClickListener {
-      openUserAgreement()
-    }
-
-    // Настройка switch "Темная тема"
-    themeSwitcher.isChecked = settingsInteractor.getDarkThemeState()
-    themeSwitcher.setOnCheckedChangeListener { _, checked ->
-      (application as? App)?.setAppTheme(checked)
+    binding.apply {
+      toolbar.setNavigationOnClickListener {
+        finish()
+      }
+      // Обработчик нажатия на кнопку «Поделиться»
+      shareButton.setOnClickListener {
+        shareAppLink()
+      }
+      // Обработчик нажатия на кнопку «Написать в поддержку»
+      supportButton.setOnClickListener {
+        sendSupportEmail()
+      }
+      // Обработчик нажатия на кнопку «Пользовательское соглашение»
+      userAgreement.setOnClickListener {
+        openUserAgreement()
+      }
+      // Настройка switch "Темная тема"
+      switchTheme.isChecked = settingsInteractor.getDarkThemeState()
+      switchTheme.setOnCheckedChangeListener { _, checked ->
+        (application as? App)?.setAppTheme(checked)
+      }
     }
   }
 

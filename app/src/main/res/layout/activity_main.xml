@@ -27,7 +27,7 @@
         android:text="@string/search" />
 
     <Button
-        android:id="@+id/media_library"
+        android:id="@+id/mediaLibrary"
         style="@style/MainMenuButton"
         app:icon="@drawable/media_library"
         android:text="@string/media_library" />
