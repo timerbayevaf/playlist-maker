@@ -15,20 +15,20 @@
         android:theme="@style/Theme.MyApp"
         tools:targetApi="31">
         <activity
-            android:name=".ui.medialibraries.MediaLibrariesActivity"
+            android:name=".medialibraries.ui.MediaLibrariesActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.search.SearchActivity"
+            android:name=".search.ui.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.audioplayer.AudioPlayerActivity"
+            android:name=".audioplayer.ui.AudioPlayerActivity"
             android:exported="false"/>
 
         <activity
-            android:name=".ui.settings.SettingsActivity"
+            android:name=".settings.ui.SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".main.ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

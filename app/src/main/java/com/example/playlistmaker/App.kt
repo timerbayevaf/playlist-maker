@@ -2,10 +2,9 @@ package com.example.playlistmaker
 
 import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.domain.api.SettingsInteractor
-import com.example.playlistmaker.util.Creator
+import com.example.playlistmaker.settings.domain.api.SettingsInteractor
+import com.example.playlistmaker.creator.Creator
 import java.text.SimpleDateFormat
 import java.util.Locale
 
