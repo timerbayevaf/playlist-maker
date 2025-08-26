@@ -3,9 +3,7 @@ package com.example.playlistmaker.main.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
-import android.view.View
 import com.example.playlistmaker.medialibraries.ui.MediaLibrariesActivity
-import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.ActivityMainBinding
 import com.example.playlistmaker.search.ui.SearchActivity
 import com.example.playlistmaker.settings.ui.SettingsActivity

@@ -4,43 +4,44 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.App
 import com.example.playlistmaker.R
-import com.example.playlistmaker.settings.domain.api.SettingsInteractor
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
-  private lateinit var settingsInteractor: SettingsInteractor
   private lateinit var binding: ActivitySettingsBinding
+  private lateinit var viewModel: SettingsViewModel
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     binding = ActivitySettingsBinding.inflate(layoutInflater)
     setContentView(binding.root)
-    settingsInteractor = Creator.provideSettingsInteractor(applicationContext)
+    viewModel = ViewModelProvider(
+      this,
+      SettingsViewModel.getFactory(applicationContext)
+    )[SettingsViewModel::class.java]
 
 
     binding.apply {
-      toolbar.setNavigationOnClickListener {
-        finish()
-      }
+      toolbar.setNavigationOnClickListener { finish() }
+
       // Обработчик нажатия на кнопку «Поделиться»
-      shareButton.setOnClickListener {
-        shareAppLink()
-      }
+      shareButton.setOnClickListener { shareAppLink() }
+
       // Обработчик нажатия на кнопку «Написать в поддержку»
-      supportButton.setOnClickListener {
-        sendSupportEmail()
-      }
+      supportButton.setOnClickListener { sendSupportEmail() }
+
       // Обработчик нажатия на кнопку «Пользовательское соглашение»
-      userAgreement.setOnClickListener {
-        openUserAgreement()
-      }
+      userAgreement.setOnClickListener { openUserAgreement() }
+
       // Настройка switch "Темная тема"
-      switchTheme.isChecked = settingsInteractor.getDarkThemeState()
+      viewModel.getDarkThemeLiveData().observe(this@SettingsActivity) { isDark ->
+        switchTheme.isChecked = isDark
+        (application as? App)?.setAppTheme(isDark)
+      }
       switchTheme.setOnCheckedChangeListener { _, checked ->
-        (application as? App)?.setAppTheme(checked)
+        viewModel.switchTheme(checked)
       }
     }
   }
