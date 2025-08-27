@@ -30,7 +30,7 @@
         android:textSize="@dimen/text_size_normal" />
 
     <TextView
-        android:id="@+id/share_button"
+        android:id="@+id/shareButton"
         style="@style/SettingsItem"
         android:text="@string/share"
         android:textColor="?attr/colorOnSurface"
@@ -40,7 +40,7 @@
     />
 
     <TextView
-        android:id="@+id/support_button"
+        android:id="@+id/supportButton"
         style="@style/SettingsItem"
         android:text="@string/support"
         android:textColor="?attr/colorOnSurface"
@@ -50,7 +50,7 @@
     />
 
     <TextView
-        android:id="@+id/user_agreement"
+        android:id="@+id/userAgreement"
         style="@style/SettingsItem"
         android:textColor="?attr/colorOnSurface"
         android:text="@string/user_agreement"
