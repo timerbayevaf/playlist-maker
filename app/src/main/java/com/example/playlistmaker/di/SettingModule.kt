@@ -1,6 +1,7 @@
 package com.example.playlistmaker.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.example.playlistmaker.settings.data.SettingsRepositoryImpl
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.settings.domain.api.SettingsRepository
@@ -11,18 +12,16 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val settingModule = module {
-  single {
+  single<SharedPreferences> {
     androidContext()
-      .getSharedPreferences(
-        "local_storage", Context.MODE_PRIVATE
-      )
+      .getSharedPreferences("local_storage", Context.MODE_PRIVATE)
   }
 
   single<SettingsRepository> {
     SettingsRepositoryImpl(sharedPreferences = get())
   }
 
-  single< SettingsInteractor> {
+  factory< SettingsInteractor> {
     SettingsInteractorImpl(settingsRepository = get())
   }
 

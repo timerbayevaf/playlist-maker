@@ -15,8 +15,6 @@ import org.koin.core.component.get
 
 class App : Application(), KoinComponent {
   companion object {
-    private var instance: App? = null
-
     fun getFormattedTrackTime(millis: Long): String {
       return SimpleDateFormat("mm:ss", Locale.getDefault()).format(millis)
     }
@@ -24,8 +22,6 @@ class App : Application(), KoinComponent {
 
   override fun onCreate() {
     super.onCreate()
-    instance = this
-
     startKoin {
       androidContext(this@App)
       modules(listOf(audioPlayerModule, searchModule, settingModule))

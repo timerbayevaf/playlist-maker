@@ -12,6 +12,7 @@ import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.search.ui.SearchViewModel
+import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -19,6 +20,8 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 val searchModule = module {
+
+  single { Gson() }
 
   single<TrackApi> {
     Retrofit.Builder().baseUrl(ITUNES_BASE_URL)
@@ -32,14 +35,14 @@ val searchModule = module {
   }
 
   single<SearchHistoryStorage> {
-    SearchHistoryStorageImpl(sharedPreferences = get())
+    SearchHistoryStorageImpl(sharedPreferences = get(), gson = get())
   }
 
   single<SearchHistoryRepository> {
     SearchHistoryRepositoryImpl(networkClient = get(), storage = get())
   }
 
-  single<SearchHistoryInteractor> {
+  factory<SearchHistoryInteractor> {
     SearchHistoryInteractorImpl(repository = get())
   }
 

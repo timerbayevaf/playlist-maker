@@ -19,7 +19,7 @@ val audioPlayerModule = module {
     AudioPlayerRepositoryImpl(mediaPlayer = get())
   }
 
-  single<AudioPlayerInteractor> {
+  factory<AudioPlayerInteractor> {
     AudioPlayerInteractorImpl(repository = get())
   }
 

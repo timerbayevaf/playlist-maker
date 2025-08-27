@@ -106,10 +106,6 @@ class SearchViewModel(
     }
   }
 
-  fun focusVisibility() {
-    renderState(StateSearch.Content(emptyList()))
-  }
-
   fun restoreState() {
     lastState?.let {
       searchTrackStatusLiveData.postValue(it)

@@ -6,7 +6,10 @@ import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistoryStorageImpl(private val sharedPreferences: SharedPreferences):
+class SearchHistoryStorageImpl(
+  private val sharedPreferences: SharedPreferences,
+  private val gson: Gson
+):
   SearchHistoryStorage {
   companion object {
     const val HISTORY = "history"
@@ -37,7 +40,7 @@ class SearchHistoryStorageImpl(private val sharedPreferences: SharedPreferences)
 
      if (!json.isNullOrEmpty()) {
        val sType = object : TypeToken<ArrayList<Track>>() {}.type
-       historyList = Gson().fromJson(json, sType)
+       historyList = gson.fromJson(json, sType)
      }
 
      return historyList
@@ -48,7 +51,7 @@ class SearchHistoryStorageImpl(private val sharedPreferences: SharedPreferences)
   }
 
   private fun createJsonFromTracksList(sharedPreferences: SharedPreferences, tracksList: ArrayList<Track>) {
-    val json = Gson().toJson(tracksList)
+    val json = gson.toJson(tracksList)
     sharedPreferences.edit()
       .putString(HISTORY, json)
       .apply()

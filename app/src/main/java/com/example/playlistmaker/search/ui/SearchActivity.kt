@@ -55,7 +55,7 @@ class SearchActivity : AppCompatActivity() {
         viewModel.searchDebounce(
           changedText = currentText
         )
-        updateClearButtonVisibility(currentText, binding.searchEditText.hasFocus())
+        updateClearButtonVisibility(currentText)
 
       }
     }
@@ -71,12 +71,7 @@ class SearchActivity : AppCompatActivity() {
     binding.clearButton.setOnClickListener {
       viewModel.clearSearchText()
       binding.searchEditText.text.clear()
-      updateClearButtonVisibility(binding.searchEditText.text.toString(), false)
-    }
-
-    binding.searchEditText.setOnFocusChangeListener { _, hasFocus ->
-      updateClearButtonVisibility(binding.searchEditText.text.toString(), hasFocus)
-      viewModel.focusVisibility()
+      updateClearButtonVisibility(binding.searchEditText.text.toString())
     }
   }
 
@@ -153,8 +148,8 @@ class SearchActivity : AppCompatActivity() {
   }
 
   // обновления видимости кнопки очистки
-  private fun updateClearButtonVisibility(text: String, hasFocus: Boolean) {
-    val shouldShowClearButton = text.isNotEmpty() || hasFocus
+  private fun updateClearButtonVisibility(text: String) {
+    val shouldShowClearButton = text.isNotEmpty()
     binding.clearButton.visibility = if (shouldShowClearButton) View.VISIBLE else View.GONE
   }
 
