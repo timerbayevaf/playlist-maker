@@ -1,17 +1,19 @@
 package com.example.playlistmaker.search.data
 
 import android.content.SharedPreferences
+import com.example.playlistmaker.search.domain.api.SearchHistoryStorage
 import com.example.playlistmaker.search.domain.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistoryStorage(private val sharedPreferences: SharedPreferences) {
+class SearchHistoryStorageImpl(private val sharedPreferences: SharedPreferences):
+  SearchHistoryStorage {
   companion object {
     const val HISTORY = "history"
     private const val MAX_HISTORY_SIZE = 10
   }
 
-   fun saveToHistory(track: Track) {
+  override fun saveToHistory(track: Track) {
      val currentHistory = getHistory()
 
      // Удаляем трек если уже есть (чтобы не было дубликатов)
@@ -29,7 +31,7 @@ class SearchHistoryStorage(private val sharedPreferences: SharedPreferences) {
      createJsonFromTracksList(sharedPreferences, currentHistory)
   }
 
-   fun getHistory(): ArrayList<Track> {
+  override fun getHistory(): ArrayList<Track> {
      var historyList = ArrayList<Track>()
      val json = sharedPreferences.getString(HISTORY, null)
 
@@ -41,7 +43,7 @@ class SearchHistoryStorage(private val sharedPreferences: SharedPreferences) {
      return historyList
   }
 
-  fun clearHistoryList() {
+  override fun clearHistoryList() {
     createJsonFromTracksList(sharedPreferences, ArrayList())
   }
 

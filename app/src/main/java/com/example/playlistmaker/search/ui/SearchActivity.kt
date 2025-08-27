@@ -9,19 +9,19 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.audioplayer.ui.AudioPlayerActivity
 import com.example.playlistmaker.databinding.ActivitySearchBinding
 import com.example.playlistmaker.search.data.mappers.toUI
 import com.example.playlistmaker.search.presentation.models.TrackUI
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
   companion object {
     private const val CLICK_DEBOUNCE_DELAY = 1000L
   }
 
-  private lateinit var viewModel: SearchViewModel
+  private val viewModel by viewModel<SearchViewModel>()
   private lateinit var binding: ActivitySearchBinding
   private var trackAdapter = TrackAdapter { startAdapter(it) }
   private var textWatcher: TextWatcher? = null
@@ -34,12 +34,6 @@ class SearchActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     binding = ActivitySearchBinding.inflate(layoutInflater)
     setContentView(binding.root)
-
-    // Инициализация ViewModel
-    viewModel = ViewModelProvider(
-      this,
-      SearchViewModel.getFactory(this)
-    )[SearchViewModel::class.java]
 
     viewModel.getSearchTrackStatusLiveData().observe(this) {
       render(it)
