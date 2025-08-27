@@ -1,9 +1,5 @@
 package com.example.playlistmaker.search.data.dto
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
-
-@Parcelize
 data class TrackDto (
   val trackId: Int, // Уникальный идентификатор трека
   val trackName: String, // Название композиции
@@ -15,4 +11,4 @@ data class TrackDto (
   val primaryGenreName: String?, // Жанр трека
   val country: String?, // Страна исполнителя
   val previewUrl: String? // Ссылка на отрывок трека
-): Parcelable
+)

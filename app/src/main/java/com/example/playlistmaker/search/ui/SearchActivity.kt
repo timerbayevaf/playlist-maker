@@ -1,5 +1,6 @@
 package com.example.playlistmaker.search.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -12,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.audioplayer.ui.AudioPlayerActivity
 import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.search.data.mappers.toUI
+import com.example.playlistmaker.search.presentation.models.TrackUI
 
 class SearchActivity : AppCompatActivity() {
   companion object {
@@ -106,6 +109,7 @@ class SearchActivity : AppCompatActivity() {
     }
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   private fun showHistoryList(tracksList: List<Track>) {
     hideAllView()
     binding.apply {
@@ -123,6 +127,7 @@ class SearchActivity : AppCompatActivity() {
     binding.progressBar.visibility = View.VISIBLE
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   fun showContent(moviesList: List<Track>) {
     hideAllView()
     binding.recyclerView.visibility = View.VISIBLE
@@ -132,6 +137,7 @@ class SearchActivity : AppCompatActivity() {
     trackAdapter.notifyDataSetChanged()
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   fun showError(errorMessage: String) {
     hideAllView()
     binding.apply {
@@ -142,6 +148,7 @@ class SearchActivity : AppCompatActivity() {
     trackAdapter.notifyDataSetChanged()
   }
 
+  @SuppressLint("NotifyDataSetChanged")
   fun showEmpty(emptyMessage: String) {
     binding.apply {
       placeholder.visibility = View.VISIBLE
@@ -175,7 +182,9 @@ class SearchActivity : AppCompatActivity() {
     if (clickDebounce()) {
       viewModel.addTrackInHistoryList(track)
       val intent = Intent(this, AudioPlayerActivity::class.java)
-        .apply { putExtra(Track.TRACK, track) }
+        .apply {
+          putExtra(TrackUI.TRACK, track.toUI())
+        }
       startActivity(intent)
     }
   }

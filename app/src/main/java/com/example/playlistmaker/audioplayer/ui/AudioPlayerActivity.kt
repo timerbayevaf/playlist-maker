@@ -15,6 +15,8 @@ import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.audioplayer.domain.models.PlayerState
 import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.search.domain.models.Track
+import com.example.playlistmaker.search.presentation.models.TrackUI
+import com.example.playlistmaker.search.data.mappers.toDomain
 
 class AudioPlayerActivity : AppCompatActivity() {
   companion object {
@@ -38,26 +40,16 @@ class AudioPlayerActivity : AppCompatActivity() {
     )[AudioPlayerViewModel::class.java]
 
     val track = getTrackFromIntent()
+    Log.d("AudioPlayerActivity", "Track received: $track")
     track?.let { setupTrackViews(it) } ?: run {
       Log.e(TAG, "Track data not available")
       finish()
     }
 
-    viewModel.getStatePlayerLiveData().observe(this) {state ->
-      when(state) {
-        PlayerState.PAUSED -> setPlayPauseIcon(false)
-        PlayerState.PLAYING -> setPlayPauseIcon(true)
-        PlayerState.PREPARED, PlayerState.DEFAULT -> {
-          setPlayPauseIcon(false)
-          binding.trackTime.text = getString(R.string.player_default_time)
-        }
-      }
+    viewModel.getScreenStateLiveData().observe(this) {state ->
+      setPlayPauseIcon(state.playerState == PlayerState.PLAYING)
+      binding.trackTime.text = getFormattedTrackTime(state.currentTime)
     }
-
-    viewModel.getCurrentTimeLiveData().observe(this) { time ->
-      binding.trackTime.text = getFormattedTrackTime(time)
-    }
-
   }
 
   private fun setupToolbar() {
@@ -68,12 +60,14 @@ class AudioPlayerActivity : AppCompatActivity() {
 
   // Получаем объект Track из Intent
   private fun getTrackFromIntent(): Track? {
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-      intent.getParcelableExtra(Track.TRACK, Track::class.java)
+    val trackUI: TrackUI? = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+      intent.getParcelableExtra(TrackUI.TRACK, TrackUI::class.java)
     } else {
       @Suppress("DEPRECATION")
-      intent.getParcelableExtra(Track.TRACK)
+      intent.getParcelableExtra(TrackUI.TRACK)
     }
+    return trackUI?.toDomain()
+
   }
 
   private fun setupTrackViews(track: Track) {

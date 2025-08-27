@@ -11,6 +11,7 @@ class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPla
   override fun prepare(url: String, onChangeState: (s: PlayerState) -> Unit) {
     this.onChangeState = onChangeState
     mediaPlayer.apply {
+      reset() // сброс перед новым url
       setDataSource(url)
       prepareAsync()
       setOnPreparedListener {

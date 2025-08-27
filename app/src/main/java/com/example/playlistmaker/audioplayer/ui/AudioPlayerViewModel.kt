@@ -24,35 +24,37 @@ class AudioPlayerViewModel(val audioPlayerInteractor: AudioPlayerInteractor): Vi
   }
   private val handler = Handler(Looper.getMainLooper())
   private val runnable = createUpdateTimerRunnable()
-  private val statePlayerLiveData = MutableLiveData<PlayerState>()
-  fun getStatePlayerLiveData(): LiveData<PlayerState> = statePlayerLiveData
-
-  private val currentTimeLiveData = MutableLiveData<Long>()
-  fun getCurrentTimeLiveData(): LiveData<Long> = currentTimeLiveData
+  private val screenStateLiveData = MutableLiveData(AudioPlayerScreenState())
+  fun getScreenStateLiveData(): LiveData<AudioPlayerScreenState> = screenStateLiveData
 
   private fun createUpdateTimerRunnable(): Runnable {
     return object : Runnable {
       override fun run() {
         val position = audioPlayerInteractor.getPosition()
-        currentTimeLiveData.postValue(position)
-        handler.postDelayed(this, AudioPlayerViewModel.DELAY)
+        screenStateLiveData.value = screenStateLiveData.value?.copy(currentTime = position)
+        handler.postDelayed(this, DELAY)
       }
     }
   }
 
   init {
     audioPlayerInteractor.switchedStatePlayer { state ->
-      statePlayerLiveData.postValue(state)
+      updateState(state)
       if (state == PlayerState.DEFAULT) handler.removeCallbacks(runnable)
     }
-
   }
+
+  private fun updateState(state: PlayerState) {
+    val currentTime = screenStateLiveData.value?.currentTime ?: 0L
+    screenStateLiveData.postValue(AudioPlayerScreenState(state, currentTime))
+  }
+
 
   fun preparePlayer(url: String) {
     audioPlayerInteractor.preparePlayer(url) {newState ->
       when (newState) {
         PlayerState.PREPARED, PlayerState.DEFAULT -> {
-          statePlayerLiveData.postValue(PlayerState.PREPARED)
+          updateState(PlayerState.PREPARED)
           handler.removeCallbacks(runnable)
         }
         else -> {
@@ -65,13 +67,13 @@ class AudioPlayerViewModel(val audioPlayerInteractor: AudioPlayerInteractor): Vi
   fun onStart() {
     audioPlayerInteractor.startPlayer()
     handler.post(runnable)
-    statePlayerLiveData.postValue(PlayerState.PLAYING)
+    updateState(PlayerState.PLAYING)
   }
 
   fun onPause() {
     handler.removeCallbacks(runnable)
     audioPlayerInteractor.pausePlayer()
-    statePlayerLiveData.postValue(PlayerState.PAUSED)
+    updateState(PlayerState.PAUSED)
   }
 
   fun onDestroy() {
@@ -80,7 +82,7 @@ class AudioPlayerViewModel(val audioPlayerInteractor: AudioPlayerInteractor): Vi
 
   fun onResume() {
     handler.removeCallbacks(runnable)
-    statePlayerLiveData.postValue(PlayerState.PAUSED)
+    updateState(PlayerState.PAUSED)
   }
 
   fun changePlayerState() {
@@ -89,20 +91,20 @@ class AudioPlayerViewModel(val audioPlayerInteractor: AudioPlayerInteractor): Vi
         PlayerState.PLAYING -> {
           handler.removeCallbacks(runnable)
           handler.post(runnable)
-          statePlayerLiveData.postValue(PlayerState.PLAYING)
+          updateState(PlayerState.PLAYING)
         }
         PlayerState.PAUSED -> {
           handler.removeCallbacks(runnable)
-          statePlayerLiveData.postValue(PlayerState.PAUSED)
+          updateState(PlayerState.PAUSED)
         }
         PlayerState.PREPARED -> {
           handler.removeCallbacks(runnable)
           handler.post(runnable)
-          statePlayerLiveData.postValue(PlayerState.PREPARED)
+          updateState(PlayerState.PREPARED)
         }
         else -> {
           handler.removeCallbacks(runnable)
-          statePlayerLiveData.postValue(PlayerState.DEFAULT)
+          updateState(PlayerState.DEFAULT)
         }
       }
     }

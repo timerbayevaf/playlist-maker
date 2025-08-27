@@ -16,9 +16,6 @@ import com.example.playlistmaker.settings.domain.impl.SettingsInteractorImpl
 import com.example.playlistmaker.search.domain.impl.SearchHistoryInteractorImpl
 
 object Creator {
-  private val PREFERENCES = "practicum_example_preferences"
-  private var mediaPlayer = MediaPlayer()
-
   private fun getSearchHistoryRepository(context: Context): SearchHistoryRepository {
     val sharedPreferences = context.getSharedPreferences(
       SearchHistoryStorage.HISTORY, Context.MODE_PRIVATE)
@@ -31,6 +28,7 @@ object Creator {
   }
 
   fun provideAudioPlayerInteractor(): AudioPlayerInteractor {
+    val mediaPlayer = MediaPlayer()
     return AudioPlayerInteractorImpl(AudioPlayerRepositoryImpl(mediaPlayer))
   }
 
