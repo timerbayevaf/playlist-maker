@@ -1,12 +1,12 @@
 package com.example.playlistmaker.search.data
 
-import com.bumptech.glide.load.engine.Resource
 import com.example.playlistmaker.search.data.dto.TracksSearchRequest
 import com.example.playlistmaker.search.data.dto.TracksSearchResponse
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
+import com.example.playlistmaker.search.domain.api.SearchHistoryStorage
 import com.example.playlistmaker.search.domain.models.Track
 
-class SearchRepositoryImpl(private val networkClient: NetworkClient,private val storage: SearchHistoryStorage) : SearchHistoryRepository {
+class SearchHistoryRepositoryImpl(private val networkClient: NetworkClient, private val storage: SearchHistoryStorage) : SearchHistoryRepository {
   override fun searchTracks(expression: String): List<Track> {
     val response = networkClient.doRequest(TracksSearchRequest(expression))
     if (response.resultCode == 200) {

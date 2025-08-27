@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="MainLinearLayout" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@color/background_night</item>
+    </style>
     <style name="BaseLinearLayout" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:background">@color/background_night</item>
     </style>

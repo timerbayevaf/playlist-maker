@@ -70,7 +70,7 @@
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
-        android:gravity="center_horizontal" />
+        android:gravity="start" />
 
     <!-- Имя исполнителя -->
     <TextView
@@ -85,7 +85,7 @@
         app:layout_constraintEnd_toStartOf="@id/rightGuideline"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="30dp"
-        android:gravity="center_horizontal" />
+        android:gravity="start"/>
 
 
     <!-- Кнопка добавления в плейлист -->
