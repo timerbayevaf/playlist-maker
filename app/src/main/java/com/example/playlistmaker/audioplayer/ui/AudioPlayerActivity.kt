@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.App.Companion.getFormattedTrackTime
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.audioplayer.domain.models.PlayerState
@@ -17,13 +15,15 @@ import com.example.playlistmaker.databinding.ActivityPlayerBinding
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.search.presentation.models.TrackUI
 import com.example.playlistmaker.search.data.mappers.toDomain
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AudioPlayerActivity : AppCompatActivity() {
   companion object {
     private const val TAG = "PlayerActivity"
   }
-  private lateinit var settingsInteractor: SettingsInteractor
-  private lateinit var viewModel: AudioPlayerViewModel
+  private val settingsInteractor: SettingsInteractor by inject()
+  private val viewModel by viewModel<AudioPlayerViewModel>()
   private lateinit var binding: ActivityPlayerBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,13 +31,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     binding = ActivityPlayerBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    settingsInteractor = Creator.provideSettingsInteractor(applicationContext)
-
     setupToolbar()
-
-    viewModel = ViewModelProvider(
-      this, AudioPlayerViewModel.getViewModelFactory()
-    )[AudioPlayerViewModel::class.java]
 
     val track = getTrackFromIntent()
     Log.d("AudioPlayerActivity", "Track received: $track")
