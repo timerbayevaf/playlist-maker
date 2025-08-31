@@ -3,6 +3,7 @@ package com.example.playlistmaker
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.di.audioPlayerModule
+import com.example.playlistmaker.di.mediaLibrariesModule
 import com.example.playlistmaker.settings.domain.api.SettingsInteractor
 import com.example.playlistmaker.di.searchModule
 import com.example.playlistmaker.di.settingModule
@@ -24,7 +25,7 @@ class App : Application(), KoinComponent {
     super.onCreate()
     startKoin {
       androidContext(this@App)
-      modules(listOf(audioPlayerModule, searchModule, settingModule))
+      modules(listOf(audioPlayerModule, searchModule, settingModule, mediaLibrariesModule))
     }
 
     // Применение темы
