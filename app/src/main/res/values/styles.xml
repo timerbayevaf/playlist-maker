@@ -10,23 +10,6 @@
     <style name="ToolbarTitleText">
         <item name="android:textSize">@dimen/text_size_large</item>
     </style>
-    <!-- Стиль для кнопок в главном меню -->
-    <style name="MainMenuButton" parent="Widget.MaterialComponents.Button.UnelevatedButton">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:backgroundTint">@color/white</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">@dimen/text_size_large</item>
-        <item name="iconGravity">textStart</item>
-        <item name="iconPadding">@dimen/icon_padding</item>
-        <item name="iconTint">@color/black</item>
-        <item name="cornerRadius">@dimen/button_corner_radius</item>
-        <item name="android:fontFamily">@font/ys_display_medium</item>
-        <item name="android:elevation">0dp</item>
-        <item name="android:stateListAnimator">@null</item>
-    </style>
 
     <!-- Стиль для TextView в настройках -->
     <style name="SettingsItem">
@@ -240,5 +223,14 @@
         <item name="textAllCaps">false</item>
     </style>
 
+    <style name="bottom_navigation_view" >
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/background_night</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textAlignment">center</item>
+        <item name="itemIconTint">@drawable/bottom_navigation_tab_bar</item>
+        <item name="itemTextColor">@drawable/bottom_navigation_tab_bar</item>
+    </style>
 
 </resources>

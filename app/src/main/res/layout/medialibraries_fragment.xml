@@ -8,14 +8,13 @@
     android:orientation="vertical"
     android:paddingTop="14dp"
     android:paddingBottom="40dp"
-    tools:context=".medialibraries.ui.MediaLibrariesActivity"
+    tools:context=".medialibraries.ui.MediaLibrariesFragment"
     tools:ignore="ScrollViewSize">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/BaseToolbar"
         app:contentInsetStartWithNavigation="0dp"
-        app:navigationIcon="@drawable/back"
         app:title="@string/media_library" />
 
     <com.google.android.material.tabs.TabLayout
