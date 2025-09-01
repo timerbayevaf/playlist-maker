@@ -15,9 +15,19 @@ class MainActivity : AppCompatActivity() {
     binding = ActivityMainBinding.inflate(layoutInflater)
     setContentView(binding.root)
 
-    val navHostFragment = supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
+    val navHostFragment =
+      supportFragmentManager.findFragmentById(R.id.container_view) as NavHostFragment
     val navController = navHostFragment.navController
 
     binding.bottomNavigationView.setupWithNavController(navController)
+
+    navController.addOnDestinationChangedListener { _, destination, _ ->
+      if (destination.id == R.id.audioPlayerFragment) {
+        binding.bottomNavigationView.visibility = android.view.View.GONE
+      } else {
+        binding.bottomNavigationView.visibility = android.view.View.VISIBLE
+      }
+
+    }
   }
 }

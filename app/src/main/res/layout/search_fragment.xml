@@ -12,6 +12,12 @@
     tools:context=".search.ui.SearchFragment"
     tools:ignore="ScrollViewSize">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/BaseToolbar"
+        app:contentInsetStartWithNavigation="0dp"
+        app:title="@string/search" />
+
     <FrameLayout
         style="@style/OutlineContainer"
         android:layout_marginStart="16dp"
