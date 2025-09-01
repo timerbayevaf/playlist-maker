@@ -1,28 +1,31 @@
 package com.example.playlistmaker.search.ui
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.audioplayer.ui.AudioPlayerActivity
-import com.example.playlistmaker.databinding.ActivitySearchBinding
+import com.example.playlistmaker.audioplayer.ui.AudioPlayerFragment
+import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.search.data.mappers.toUI
-import com.example.playlistmaker.search.presentation.models.TrackUI
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchActivity : AppCompatActivity() {
+class SearchFragment : Fragment() {
   companion object {
     private const val CLICK_DEBOUNCE_DELAY = 1000L
   }
 
   private val viewModel by viewModel<SearchViewModel>()
-  private lateinit var binding: ActivitySearchBinding
+  private var _binding: SearchFragmentBinding? = null
+  private val binding get() = _binding!!
   private var trackAdapter = TrackAdapter { startAdapter(it) }
   private var textWatcher: TextWatcher? = null
 
@@ -30,17 +33,16 @@ class SearchActivity : AppCompatActivity() {
   private var isClickAllowed = true
   private val handler = Handler(Looper.getMainLooper())
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    binding = ActivitySearchBinding.inflate(layoutInflater)
-    setContentView(binding.root)
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    _binding = SearchFragmentBinding.inflate(inflater, container, false)
+    return binding.root
+  }
 
-    viewModel.getSearchTrackStatusLiveData().observe(this) {
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    viewModel.getSearchTrackStatusLiveData().observe(viewLifecycleOwner) {
       render(it)
-    }
-
-    binding.toolbar.setNavigationOnClickListener {
-      finish()
     }
 
     // Recycler View
@@ -73,6 +75,12 @@ class SearchActivity : AppCompatActivity() {
       binding.searchEditText.text.clear()
       updateClearButtonVisibility(binding.searchEditText.text.toString())
     }
+  }
+
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 
   private fun render(state: StateSearch) {
@@ -170,11 +178,15 @@ class SearchActivity : AppCompatActivity() {
   private fun startAdapter(track: Track) {
     if (clickDebounce()) {
       viewModel.addTrackInHistoryList(track)
-      val intent = Intent(this, AudioPlayerActivity::class.java)
-        .apply {
-          putExtra(TrackUI.TRACK, track.toUI())
-        }
-      startActivity(intent)
+
+      val bundle = Bundle().apply {
+        putParcelable(AudioPlayerFragment.ARG_TRACK, track.toUI())
+      }
+
+      findNavController().navigate(
+        R.id.action_searchFragment_to_audioPlayerFragment,
+        bundle
+      )
     }
   }
 }

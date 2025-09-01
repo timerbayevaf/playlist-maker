@@ -3,43 +3,53 @@ package com.example.playlistmaker.settings.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.App
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.R
-import com.example.playlistmaker.databinding.ActivitySettingsBinding
+import com.example.playlistmaker.databinding.SettingsFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
-  private lateinit var binding: ActivitySettingsBinding
+class SettingsFragment : Fragment() {
+  private var _binding: SettingsFragmentBinding? = null
+  private val binding get() = _binding!!
   private val viewModel by viewModel<SettingsViewModel>()
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    binding = ActivitySettingsBinding.inflate(layoutInflater)
-    setContentView(binding.root)
+  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    _binding = SettingsFragmentBinding.inflate(inflater, container, false)
+    return binding.root
+  }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
 
+    setupClickListeners()
+    setupThemeSwitchObserver()
+  }
+
+  private fun setupClickListeners() {
     binding.apply {
-      toolbar.setNavigationOnClickListener { finish() }
-
-      // Обработчик нажатия на кнопку «Поделиться»
-      shareButton.setOnClickListener { shareAppLink() }
-
-      // Обработчик нажатия на кнопку «Написать в поддержку»
-      supportButton.setOnClickListener { sendSupportEmail() }
-
-      // Обработчик нажатия на кнопку «Пользовательское соглашение»
-      userAgreement.setOnClickListener { openUserAgreement() }
-
-      // Настройка switch "Темная тема"
-      viewModel.getDarkThemeLiveData().observe(this@SettingsActivity) { isDark ->
-        switchTheme.isChecked = isDark
-        (application as? App)?.setAppTheme(isDark)
+      switchTheme.setOnCheckedChangeListener { _, isChecked ->
+        viewModel.switchTheme(isChecked)
       }
-      switchTheme.setOnCheckedChangeListener { _, checked ->
-        viewModel.switchTheme(checked)
+      shareButton.setOnClickListener { shareAppLink() }
+      supportButton.setOnClickListener { sendSupportEmail() }
+      userAgreement.setOnClickListener { openUserAgreement() }
+    }
+  }
+
+  private fun setupThemeSwitchObserver() {
+    viewModel.getDarkThemeLiveData().observe(viewLifecycleOwner) { isChecked ->
+      if (binding.switchTheme.isChecked != isChecked) {
+        binding.switchTheme.isChecked = isChecked
       }
     }
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    _binding = null
   }
 
   private fun shareAppLink() {
