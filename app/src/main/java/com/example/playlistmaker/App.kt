@@ -31,18 +31,22 @@ class App : Application(), KoinComponent {
     // Применение темы
     applyTheme()
   }
+
   private fun applyTheme() {
     val settingsInteractor: SettingsInteractor = get()
     val isDarkTheme = settingsInteractor.getDarkThemeState()
-    setAppTheme(isDarkTheme)
+    AppCompatDelegate.setDefaultNightMode(
+      if (isDarkTheme) AppCompatDelegate.MODE_NIGHT_YES
+      else AppCompatDelegate.MODE_NIGHT_NO
+    )
   }
 
   fun setAppTheme(isDark: Boolean) {
-    val settingsInteractor: SettingsInteractor = get()
-    settingsInteractor.updateDarkThemeState(isDark)
     AppCompatDelegate.setDefaultNightMode(
       if (isDark) AppCompatDelegate.MODE_NIGHT_YES
       else AppCompatDelegate.MODE_NIGHT_NO
     )
   }
+
+
 }
