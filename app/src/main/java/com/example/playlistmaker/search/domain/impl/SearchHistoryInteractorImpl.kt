@@ -3,17 +3,26 @@ package com.example.playlistmaker.search.domain.impl
 import com.example.playlistmaker.search.domain.api.SearchHistoryInteractor
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.models.Track
-import java.util.concurrent.Executors
+import com.example.playlistmaker.utils.Resource
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class SearchHistoryInteractorImpl(private val repository: SearchHistoryRepository) : SearchHistoryInteractor {
 
-  private val executor = Executors.newCachedThreadPool()
+  override fun searchTracks(expression: String): Flow<Pair<List<Track>?, String?>> {
+    return repository.searchTracks(expression).map { result ->
+        when (result) {
+          is Resource.Success -> {
+            Pair(result.data, null)
+          }
 
-  override fun searchTracks(expression: String, consumer: SearchHistoryInteractor.SearchConsumer) {
-    executor.execute {
-      consumer.consume(repository.searchTracks(expression), null)
+          is Resource.Error -> {
+            Pair(null, result.message)
+          }
+        }
+      }
     }
-  }
+
   override fun getHistory(): List<Track> {
     return repository.getHistory()
   }

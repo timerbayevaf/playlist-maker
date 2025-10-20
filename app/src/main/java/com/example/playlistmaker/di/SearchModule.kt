@@ -31,7 +31,7 @@ val searchModule = module {
   }
 
   single<NetworkClient> {
-    RetrofitNetworkClient(itunesService = get())
+    RetrofitNetworkClient(itunesService = get(), context = get())
   }
 
   single<SearchHistoryStorage> {

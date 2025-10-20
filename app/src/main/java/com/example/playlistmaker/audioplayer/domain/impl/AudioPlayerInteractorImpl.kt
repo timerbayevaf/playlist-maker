@@ -18,10 +18,6 @@ class AudioPlayerInteractorImpl(private val repository: AudioPlayerRepository):
     repository.pause()
   }
 
-  override fun stopPlayer() {
-    repository.stop()
-  }
-
   override fun getPosition(): Long = repository.getPosition()
 
   override fun switchedStatePlayer(callback: (PlayerState) -> Unit) {
