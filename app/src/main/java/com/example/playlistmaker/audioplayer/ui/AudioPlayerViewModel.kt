@@ -1,7 +1,5 @@
 package com.example.playlistmaker.audioplayer.ui
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,15 +13,16 @@ import kotlinx.coroutines.launch
 
 class AudioPlayerViewModel(val audioPlayerInteractor: AudioPlayerInteractor): ViewModel()  {
   companion object {
-    private const val DELAY = 1000L
+    private const val DELAY = 300L
     private const val DEFAULT_TIMER = 0L
   }
-  private val handler = Handler(Looper.getMainLooper())
   private val screenStateLiveData = MutableLiveData(AudioPlayerScreenState())
   fun getScreenStateLiveData(): LiveData<AudioPlayerScreenState> = screenStateLiveData
   private var timerJob: Job? = null
 
   private fun startTimer() {
+    timerJob?.cancel()
+
     timerJob = viewModelScope.launch {
       while (isActive) {
         delay(DELAY)
@@ -35,7 +34,8 @@ class AudioPlayerViewModel(val audioPlayerInteractor: AudioPlayerInteractor): Vi
 
 
   private fun updateState(state: PlayerState) {
-    val currentTime = screenStateLiveData.value?.currentTime ?: 0L
+    val isEndOfTrack = screenStateLiveData.value?.playerState == PlayerState.PLAYING
+    val currentTime = if (isEndOfTrack) 0L else screenStateLiveData.value?.currentTime ?: DEFAULT_TIMER
     screenStateLiveData.postValue(AudioPlayerScreenState(state, currentTime))
   }
 
