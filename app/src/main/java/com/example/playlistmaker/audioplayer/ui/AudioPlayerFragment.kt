@@ -151,10 +151,6 @@ class AudioPlayerFragment : Fragment() {
     viewModel.onPause()
   }
 
-  override fun onDestroy() {
-    super.onDestroy()
-    viewModel.onDestroy()
-  }
   override fun onResume() {
     super.onResume()
     viewModel.onResume()

@@ -2,36 +2,34 @@ package com.example.playlistmaker.search.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.playlistmaker.R
 import com.example.playlistmaker.search.domain.models.Track
 import com.example.playlistmaker.audioplayer.ui.AudioPlayerFragment
 import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.search.data.mappers.toUI
+import com.example.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment() {
   companion object {
     private const val CLICK_DEBOUNCE_DELAY = 1000L
   }
-
+  private lateinit var onTrackClickDebounce: (track: Track) -> Unit
   private val viewModel by viewModel<SearchViewModel>()
   private var _binding: SearchFragmentBinding? = null
   private val binding get() = _binding!!
-  private var trackAdapter = TrackAdapter { startAdapter(it) }
+  private var trackAdapter = TrackAdapter {   track ->
+    onTrackClickDebounce(track)
+  }
   private var textWatcher: TextWatcher? = null
-
-  // Debounce
-  private var isClickAllowed = true
-  private val handler = Handler(Looper.getMainLooper())
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     _binding = SearchFragmentBinding.inflate(inflater, container, false)
@@ -74,6 +72,20 @@ class SearchFragment : Fragment() {
       viewModel.clearSearchText()
       binding.searchEditText.text.clear()
       updateClearButtonVisibility(binding.searchEditText.text.toString())
+    }
+
+    onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
+      viewModel.addTrackInHistoryList(track)
+
+      val bundle = Bundle().apply {
+        putParcelable(AudioPlayerFragment.ARG_TRACK, track.toUI())
+      }
+
+      findNavController().navigate(
+        R.id.action_searchFragment_to_audioPlayerFragment,
+        bundle
+      )
+
     }
   }
 
@@ -147,8 +159,10 @@ class SearchFragment : Fragment() {
 
   @SuppressLint("NotifyDataSetChanged")
   fun showEmpty(emptyMessage: String) {
+    hideAllView()
     binding.apply {
       placeholder.visibility = View.VISIBLE
+      placeholderError.visibility = View.VISIBLE
       placeholderError.text = emptyMessage
       placeholderNothingFound.visibility = View.VISIBLE
     }
@@ -166,27 +180,4 @@ class SearchFragment : Fragment() {
     viewModel.restoreState()
   }
 
-  private fun clickDebounce() : Boolean {
-    val current = isClickAllowed
-    if (isClickAllowed) {
-      isClickAllowed = false
-      handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-    }
-    return current
-  }
-
-  private fun startAdapter(track: Track) {
-    if (clickDebounce()) {
-      viewModel.addTrackInHistoryList(track)
-
-      val bundle = Bundle().apply {
-        putParcelable(AudioPlayerFragment.ARG_TRACK, track.toUI())
-      }
-
-      findNavController().navigate(
-        R.id.action_searchFragment_to_audioPlayerFragment,
-        bundle
-      )
-    }
-  }
 }
