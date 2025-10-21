@@ -22,12 +22,12 @@ class SearchFragment : Fragment() {
   companion object {
     private const val CLICK_DEBOUNCE_DELAY = 1000L
   }
-  private lateinit var onMovieClickDebounce: (track: Track) -> Unit
+  private lateinit var onTrackClickDebounce: (track: Track) -> Unit
   private val viewModel by viewModel<SearchViewModel>()
   private var _binding: SearchFragmentBinding? = null
   private val binding get() = _binding!!
   private var trackAdapter = TrackAdapter {   track ->
-    onMovieClickDebounce(track)
+    onTrackClickDebounce(track)
   }
   private var textWatcher: TextWatcher? = null
 
@@ -74,7 +74,7 @@ class SearchFragment : Fragment() {
       updateClearButtonVisibility(binding.searchEditText.text.toString())
     }
 
-    onMovieClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
+    onTrackClickDebounce = debounce<Track>(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
       viewModel.addTrackInHistoryList(track)
 
       val bundle = Bundle().apply {

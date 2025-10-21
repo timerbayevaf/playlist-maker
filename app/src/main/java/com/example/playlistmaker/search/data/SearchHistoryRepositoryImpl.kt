@@ -6,16 +6,16 @@ import com.example.playlistmaker.search.data.dto.TracksSearchResponse
 import com.example.playlistmaker.search.domain.api.SearchHistoryRepository
 import com.example.playlistmaker.search.domain.api.SearchHistoryStorage
 import com.example.playlistmaker.search.domain.models.Track
-import com.example.playlistmaker.utils.Resource
+
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class SearchHistoryRepositoryImpl(private val networkClient: NetworkClient, private val storage: SearchHistoryStorage) : SearchHistoryRepository {
-  override fun searchTracks(expression: String): Flow<Resource<List<Track>>> = flow {
+  override fun searchTracks(expression: String): Flow<Result<List<Track>>> = flow {
     val response = networkClient.doRequest(TracksSearchRequest(expression))
     when (response.resultCode) {
       -1 -> {
-        emit(Resource.Error(R.string.search_no_connection.toString()))
+        emit(Result.failure(Throwable(R.string.search_no_connection.toString())))
       }
 
       200 -> {
@@ -34,11 +34,11 @@ class SearchHistoryRepositoryImpl(private val networkClient: NetworkClient, priv
               it.previewUrl
             )
           }
-          emit(Resource.Success(data))
+          emit(Result.success(data))
         }
       }
       else -> {
-        emit(Resource.Error(R.string.search_internal_server_error.toString()))
+        emit(Result.failure(Throwable(R.string.search_internal_server_error.toString())))
       }
     }
   }
