@@ -42,6 +42,7 @@ class AudioPlayerFragment : Fragment() {
     setupToolbar()
 
     val track = getTrackFromArgs()
+
     Log.d("AudioPlayerActivity", "Track received: $track")
     track?.let { setupTrackViews(it) } ?: run {
       Log.e(TAG, "Track data not available")
@@ -51,6 +52,11 @@ class AudioPlayerFragment : Fragment() {
     viewModel.getScreenStateLiveData().observe(viewLifecycleOwner) {state ->
       setPlayPauseIcon(state.playerState == PlayerState.PLAYING)
       binding.trackTime.text = getFormattedTrackTime(state.currentTime)
+      updateFavoriteIcon(state.isFavorite)
+    }
+
+    binding.addToFavorites.setOnClickListener {
+      track?.let { viewModel.onFavoriteClicked(track = it)}
     }
   }
 
@@ -63,6 +69,17 @@ class AudioPlayerFragment : Fragment() {
     binding.toolbar.setNavigationOnClickListener {
       findNavController().popBackStack()
     }
+  }
+
+  private fun updateFavoriteIcon(isFavorite: Boolean) {
+    val isDarkTheme = settingsInteractor.getDarkThemeState()
+    val iconRes = when {
+      isFavorite && !isDarkTheme -> R.drawable.favorite_active_light
+      isFavorite -> R.drawable.favorite_active_night
+      !isDarkTheme -> R.drawable.favorite
+      else -> R.drawable.favorite_night
+    }
+    binding.addToFavorites.setImageResource(iconRes)
   }
 
   // Получаем объект Track из аргументов фрагмента
@@ -95,7 +112,7 @@ class AudioPlayerFragment : Fragment() {
 
     // Подготовка плеера
     track.previewUrl?.takeIf { it.isNotEmpty() }?.let { url ->
-      viewModel.preparePlayer(url)
+      viewModel.preparePlayer(url, track)
     } ?: run {
       binding.playOrPause.isEnabled = false
       Log.e(TAG,"Preview not available")
@@ -128,7 +145,6 @@ class AudioPlayerFragment : Fragment() {
       .transform(RoundedCorners(2))
       .into(binding.albumArt)
   }
-
 
   private fun setPlayPauseIcon(isPlaying: Boolean) {
     val isDarkTheme = settingsInteractor.getDarkThemeState()

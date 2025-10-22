@@ -85,7 +85,6 @@ class SearchFragment : Fragment() {
         R.id.action_searchFragment_to_audioPlayerFragment,
         bundle
       )
-
     }
   }
 

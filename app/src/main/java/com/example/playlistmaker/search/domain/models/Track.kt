@@ -12,6 +12,7 @@ data class Track (
   val country: String?, // Страна исполнителя
   val previewUrl: String? // Ссылка на отрывок трека
 ) {
+  var isFavorite: Boolean = false
   // Функция для получения URL обложки высокого качества
   fun getCoverArtwork() = artworkUrl100?.replaceAfterLast('/',"512x512bb.jpg")
   fun getFormattedReleaseYear() = this.releaseDate?.take(4) ?: ""
