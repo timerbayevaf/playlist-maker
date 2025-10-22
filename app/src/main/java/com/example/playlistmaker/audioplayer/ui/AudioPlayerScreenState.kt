@@ -4,5 +4,6 @@ import com.example.playlistmaker.audioplayer.domain.models.PlayerState
 
 data class AudioPlayerScreenState(
   val playerState: PlayerState = PlayerState.DEFAULT,
-  val currentTime: Long = 0L
+  val currentTime: Long = 0L,
+  val isFavorite: Boolean = false
 )

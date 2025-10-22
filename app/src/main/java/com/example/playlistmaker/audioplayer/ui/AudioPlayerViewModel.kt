@@ -6,12 +6,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.audioplayer.domain.api.AudioPlayerInteractor
 import com.example.playlistmaker.audioplayer.domain.models.PlayerState
+import com.example.playlistmaker.favorite.domain.api.FavoriteTracksInteractor
+import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-class AudioPlayerViewModel(val audioPlayerInteractor: AudioPlayerInteractor): ViewModel()  {
+class AudioPlayerViewModel(
+  val audioPlayerInteractor: AudioPlayerInteractor,
+  val favoriteInteractor: FavoriteTracksInteractor
+): ViewModel()  {
   companion object {
     private const val DELAY = 300L
     private const val DEFAULT_TIMER = 0L
@@ -32,20 +38,23 @@ class AudioPlayerViewModel(val audioPlayerInteractor: AudioPlayerInteractor): Vi
     }
   }
 
-
   private fun updateState(state: PlayerState) {
-    val isEndOfTrack = screenStateLiveData.value?.playerState == PlayerState.PLAYING
+    val previousState = screenStateLiveData.value
+    val isEndOfTrack = screenStateLiveData.value?.playerState == PlayerState.PLAYING && state !== PlayerState.PAUSED
     val currentTime = if (isEndOfTrack) 0L else screenStateLiveData.value?.currentTime ?: DEFAULT_TIMER
-    screenStateLiveData.postValue(AudioPlayerScreenState(state, currentTime))
+    screenStateLiveData.postValue( previousState?.copy(
+      playerState = state,
+      currentTime = currentTime
+    ) ?: AudioPlayerScreenState(state, currentTime))
   }
 
-
-  fun preparePlayer(url: String) {
+  fun preparePlayer(url: String, track: Track) {
     audioPlayerInteractor.preparePlayer(url) {newState ->
       when (newState) {
         PlayerState.PREPARED -> {
           updateState(PlayerState.PREPARED)
           timerJob?.cancel()
+          updateFavoriteState(track)
         }
         PlayerState.DEFAULT -> {
           updateState(PlayerState.DEFAULT)
@@ -70,6 +79,24 @@ class AudioPlayerViewModel(val audioPlayerInteractor: AudioPlayerInteractor): Vi
     }
   }
 
+  fun updateFavoriteState(track: Track) {
+    viewModelScope.launch {
+      val isFavorite = favoriteInteractor.isTrackFavorite(track.trackId)
+      screenStateLiveData.postValue(screenStateLiveData.value?.copy(isFavorite = isFavorite))
+    }
+  }
+
+  fun onFavoriteClicked(track: Track) {
+    viewModelScope.launch {
+      val isFav = screenStateLiveData.value?.isFavorite == true
+      if (isFav) {
+        favoriteInteractor.deleteTrack(track)
+      } else {
+        favoriteInteractor.insertTrack(track)
+      }
+      updateFavoriteState(track)
+    }
+  }
 
   fun onResume() {
     timerJob?.cancel()
