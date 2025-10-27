@@ -150,7 +150,7 @@ class SearchFragment : Fragment() {
     hideAllView()
     binding.apply {
       placeholder.visibility = View.VISIBLE
-      placeholderNothingFound.visibility = View.VISIBLE
+      placeholderNoConnection.visibility = View.VISIBLE
       placeholderError.visibility = View.VISIBLE
       placeholderError.text = errorMessage
     }
