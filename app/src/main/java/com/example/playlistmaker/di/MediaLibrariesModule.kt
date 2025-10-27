@@ -13,6 +13,7 @@ import com.example.playlistmaker.favorite.domain.impl.FavoriteTracksInteractorIm
 import com.example.playlistmaker.medialibraries.ui.playlists.MediaLibrariesPlaylistsViewModel
 import com.example.playlistmaker.medialibraries.ui.favorite.MediaLibrariesFavoriteTracksViewModel
 import com.example.playlistmaker.playlist.data.PlaylistRepositoryImpl
+import com.example.playlistmaker.playlist.domain.api.PlaylistImageStorage
 import com.example.playlistmaker.playlist.domain.api.PlaylistInteractor
 import com.example.playlistmaker.playlist.domain.api.PlaylistRepository
 import com.example.playlistmaker.playlist.domain.impl.PlaylistInteractorImpl
@@ -39,7 +40,6 @@ val mediaLibrariesModule = module {
       .fallbackToDestructiveMigration()
       .build()
   }
-
 
   single<FavoriteTracksInteractor> {
     FavoriteTracksInteractorImpl(get())

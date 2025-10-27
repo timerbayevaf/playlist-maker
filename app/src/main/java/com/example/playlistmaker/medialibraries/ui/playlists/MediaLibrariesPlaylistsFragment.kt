@@ -51,14 +51,10 @@ class MediaLibrariesPlaylistsFragment: Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    val spacingInPixels = resources.getDimensionPixelSize(R.dimen.padding_normal)
     val layoutManager = GridLayoutManager(context, 2)
     binding.recyclerViewPlaylists.layoutManager = layoutManager
-    binding.recyclerViewPlaylists.addItemDecoration(
-      GridSpacingItemDecoration(2, spacingInPixels, includeEdge = true)
-    )
 
-    viewModel.observeState().observe(viewLifecycleOwner) {
+    viewModel.stateLiveData.observe(viewLifecycleOwner) {
       render(it)
     }
 

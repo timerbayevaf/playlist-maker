@@ -17,7 +17,7 @@ class PlaylistViewHolder(
 
     fun bind(playlist: Playlist) = with(binding) {
         playlistName.text = playlist.name
-        countTracks.text = getTrackCountText(playlist.countTracks ?: 0)
+        countTracks.text = getTrackCountText(playlist.countTracks)
         loadPlaylistImage(playlist)
     }
 
@@ -49,7 +49,7 @@ class PlaylistViewHolder(
             .load(source)
             .placeholder(R.drawable.track_placeholder)
             .transform(RoundedCorners(8))
-            .into(binding.playlist)
+            .into(binding.playlistImage)
     }
 
     companion object {

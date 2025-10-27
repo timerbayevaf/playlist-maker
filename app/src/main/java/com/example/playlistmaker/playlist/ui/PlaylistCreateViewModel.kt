@@ -12,9 +12,8 @@ import com.example.playlistmaker.playlist.domain.models.Playlist
 import java.io.File
 
 class PlaylistCreateViewModel(private val context: Context,
-                              private val interactor: PlaylistInteractor
+                              private val interactor: PlaylistInteractor,
 ): ViewModel() {
-    private val storage: PlaylistImageStorage? = null
     private val imageUrlLiveData = MutableLiveData<String>()
     fun observeImageUrl(): LiveData<String> = imageUrlLiveData
 
@@ -29,8 +28,8 @@ class PlaylistCreateViewModel(private val context: Context,
     }
 
     fun getImageUrlFromStorage(playlistName: String) {
-        val file = storage?.getImageFileForPlaylist(context, playlistName)
-        val url = file?.toUri().toString()
+        val file = PlaylistImageStorage.getImageFileForPlaylist(context, playlistName)
+        val url = file.toUri().toString()
         imageUrlLiveData.postValue(url)
     }
 

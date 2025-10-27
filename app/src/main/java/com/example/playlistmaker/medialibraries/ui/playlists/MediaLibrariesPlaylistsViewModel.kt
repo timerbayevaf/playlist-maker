@@ -5,19 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.playlistmaker.audioplayer.domain.models.PlayerState
-import com.example.playlistmaker.audioplayer.ui.AudioPlayerScreenState
 import com.example.playlistmaker.medialibraries.utils.PlaylistState
 import com.example.playlistmaker.playlist.domain.api.PlaylistInteractor
-import com.example.playlistmaker.playlist.domain.models.Playlist
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class MediaLibrariesPlaylistsViewModel(
     private val playlistInteractor: PlaylistInteractor
 ): ViewModel() {
-    private val stateLiveData = MutableLiveData<PlaylistState>()
-    fun observeState(): LiveData<PlaylistState> = stateLiveData
+    private val _stateLiveData = MutableLiveData<PlaylistState>()
+    val stateLiveData: LiveData<PlaylistState> = _stateLiveData
 
     fun loadPlaylists() {
         renderState( PlaylistState.Loading)
@@ -37,6 +34,6 @@ class MediaLibrariesPlaylistsViewModel(
     }
 
     private fun renderState(state: PlaylistState) {
-        stateLiveData.postValue(state)
+        _stateLiveData.postValue(state)
     }
 }
