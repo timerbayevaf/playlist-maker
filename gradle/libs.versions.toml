@@ -18,7 +18,7 @@ material = "1.10.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 navigationUiKtx = "2.5.3"
-roomRuntime = "2.5.1"
+roomRuntime = "2.6.1"
 viewpager2 = "1.1.0"
 
 [libraries]

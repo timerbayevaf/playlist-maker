@@ -20,9 +20,11 @@ class TrackViewHolder(private  val binding: TrackViewBinding): RecyclerView.View
             trackTime.text = getFormattedTrackTime(model.trackTimeMillis)
         }
 
+        val imageUrl = model.artworkUrl100?.takeIf { it.isNotBlank() }
+
         Glide.with(binding.root)
-            .load(model.artworkUrl100)
-            .placeholder(R.drawable.track_palceholder)
+            .load(imageUrl)
+            .placeholder(R.drawable.track_placeholder)
             .centerCrop()
             .transform(RoundedCorners(2))
             .into(binding.trackImage)

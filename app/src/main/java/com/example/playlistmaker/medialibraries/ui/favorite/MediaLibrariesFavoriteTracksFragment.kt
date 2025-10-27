@@ -31,9 +31,12 @@ class MediaLibrariesFavoriteTracksFragment : Fragment() {
   private val binding get() = _binding!!
   private val viewModel by viewModel<MediaLibrariesFavoriteTracksViewModel>()
   private lateinit var onTrackClickDebounce: (track: Track) -> Unit
-  private var favoriteTrackAdapter = TrackAdapter {   track ->
-    onTrackClickDebounce(track)
+  private val favoriteTrackAdapter by lazy {
+    TrackAdapter { track ->
+      onTrackClickDebounce(track)
+    }
   }
+  private lateinit var onCreatePlaylistClickDebounce: () -> Unit
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                             savedInstanceState: Bundle?): View? {
@@ -82,7 +85,7 @@ class MediaLibrariesFavoriteTracksFragment : Fragment() {
       }
 
       is FavoriteTrackState.Content -> {
-        favoriteTrackAdapter.trackList = state.tracks as ArrayList
+        favoriteTrackAdapter.trackList = ArrayList(state.tracks)
         favoriteTrackAdapter.notifyDataSetChanged()
         with(binding) {
           favouriteTracks.visibility = View.VISIBLE

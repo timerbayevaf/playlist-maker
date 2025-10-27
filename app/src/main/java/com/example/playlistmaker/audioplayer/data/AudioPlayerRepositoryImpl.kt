@@ -19,9 +19,9 @@ class AudioPlayerRepositoryImpl(private val mediaPlayer: MediaPlayer) : AudioPla
         onChangeState(PlayerState.PREPARED)
       }
       setOnCompletionListener {
-        playerState = PlayerState.PREPARED
-        onChangeState(PlayerState.PREPARED)
+        playerState = PlayerState.PAUSED
         mediaPlayer.seekTo(0)
+        onChangeState(PlayerState.PAUSED)
       }
     }
   }

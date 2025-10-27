@@ -17,4 +17,5 @@
     <color name="color_error">#AEAFB4</color>
     <color name="gray">#AEAFB4</color>
     <color name="text_hint">#AEAFB4</color>
+    <color name="bottom_sheet">#99000000</color>
 </resources>
