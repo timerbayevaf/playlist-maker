@@ -68,16 +68,15 @@ class PlaylistEditFragment : Fragment() {
     private fun bindPlaylistData(playlist: Playlist) {
         binding.playlistName.setText(playlist.name)
         binding.playlistDescription.setText(playlist.description)
-        urlImageForPlaylist = playlist.imageUrl
-
         if (!playlist.imageUrl.isNullOrEmpty()) {
             binding.playlistImage.setImageURI(Uri.parse(playlist.imageUrl))
             binding.addImageIcon.visibility = View.GONE
         } else {
             binding.playlistImage.setImageResource(R.drawable.track_placeholder)
+            binding.addImageIcon.visibility = View.VISIBLE
         }
-
         binding.createPlaylist.text = getString(R.string.save)
+        binding.createPlaylist.isEnabled = !playlist.name.isNullOrBlank()
     }
 
     private fun setupToolbar() {
@@ -125,13 +124,13 @@ class PlaylistEditFragment : Fragment() {
 
     private fun saveImageToPrivateStorage(uri: Uri) {
         val file = PlaylistImageStorage.getTemporaryImageFile(requireContext())
-        val inputStream = requireActivity().contentResolver.openInputStream(uri)
-        val outputStream = FileOutputStream(file)
-        BitmapFactory.decodeStream(inputStream)
-            .compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
-        inputStream?.close()
-        outputStream.close()
+        requireActivity().contentResolver.openInputStream(uri).use { input ->
+            FileOutputStream(file).use { output ->
+                BitmapFactory.decodeStream(input).compress(Bitmap.CompressFormat.JPEG, 30, output)
+            }
+        }
     }
+
 
     private fun saveChanges() {
         val updatedName = binding.playlistName.text.toString()
@@ -139,14 +138,28 @@ class PlaylistEditFragment : Fragment() {
 
         lifecycleScope.launch {
             currentPlaylist?.let { playlist ->
+                var newImageUrl = playlist.imageUrl
+
+                if (isImageSelected) {
+                    // выбрали новую картинку → temp -> final по НОВОМУ имени
+                    newImageUrl = PlaylistImageStorage.moveTempToFinal(requireContext(), updatedName) ?: newImageUrl
+                } else if (!playlist.imageUrl.isNullOrEmpty() && updatedName != playlist.name) {
+                    // картинку не меняли, но имя изменили → переименовать файл
+                    newImageUrl = PlaylistImageStorage.renameExistingImageFile(
+                        requireContext(), oldName = playlist.name, newName = updatedName
+                    ) ?: newImageUrl
+                }
+
                 val updatedPlaylist = playlist.copy(
                     name = updatedName,
                     description = updatedDescription,
-                    imageUrl = urlImageForPlaylist
+                    imageUrl = newImageUrl
                 )
+
+                // важное: вызывай апдейт через интерактор
                 viewModel.updatePlaylist(updatedPlaylist)
+
                 showSavedSnackbar()
-                setFragmentResult("playlist_edited", Bundle())
                 findNavController().navigateUp()
             }
         }

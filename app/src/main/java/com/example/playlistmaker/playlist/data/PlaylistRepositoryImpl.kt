@@ -1,9 +1,7 @@
 package com.example.playlistmaker.playlist.data
 
-import android.util.Log
 import com.example.playlistmaker.db.AppDatabase
 import com.example.playlistmaker.db.convertor.PlaylistDbConvertor
-import com.example.playlistmaker.db.convertor.TrackDbConvertor
 import com.example.playlistmaker.db.convertor.TrackInPlaylistDbConvertor
 import com.example.playlistmaker.db.entity.PlaylistEntity
 import com.example.playlistmaker.db.entity.TrackInPlaylistEntity

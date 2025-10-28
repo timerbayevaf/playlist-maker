@@ -159,6 +159,7 @@ class MedialibrariesDetailedPlaylistViewModel(
                 playlistInteractor.deleteTrackById(track.trackId)
             }
 
+            loadPlaylistById(playlistId)
             refreshPlaylistData(playlistId)
         }
     }
