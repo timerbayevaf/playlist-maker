@@ -1,5 +1,6 @@
 package com.example.playlistmaker.playlist.domain.api
 
+import com.example.playlistmaker.db.entity.PlaylistEntity
 import com.example.playlistmaker.playlist.domain.models.Playlist
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.flow.Flow
@@ -11,4 +12,8 @@ interface PlaylistRepository {
     fun getAllPlaylists(): Flow<List<Playlist>>
     suspend fun addTrackInPlaylist(playlistId: Int, trackId: String)
     suspend fun addDescriptionPlaylist(track: Track)
+    fun getPlaylist(id: Int): Flow<Playlist?>
+    fun getTracksForPlaylist(playlistId: Int): Flow<List<Track>>
+    suspend fun removeTrackFromPlaylist(playlistId: Int, track: Track)
+    suspend fun deleteTrackById(trackId: Int)
 }

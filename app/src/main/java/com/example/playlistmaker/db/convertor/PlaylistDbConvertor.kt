@@ -1,6 +1,5 @@
 package com.example.playlistmaker.db.convertor
 
-import android.util.Log
 import com.example.playlistmaker.db.entity.PlaylistEntity
 import com.example.playlistmaker.playlist.domain.models.Playlist
 import com.google.gson.Gson

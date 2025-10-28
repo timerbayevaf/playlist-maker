@@ -43,4 +43,8 @@ class PlaylistCreateViewModel(private val context: Context,
             temporaryFile.renameTo(finalFile)
         }
     }
+
+    suspend fun updatePlaylist(playlist: Playlist) {
+        interactor.updatePlaylist(playlist)
+    }
 }

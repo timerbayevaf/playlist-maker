@@ -305,7 +305,6 @@
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
         <!-- "Ручка" для перетаскивания -->
-
         <View
             android:layout_width="40dp"
             android:layout_height="4dp"
