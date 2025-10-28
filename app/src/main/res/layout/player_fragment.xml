@@ -1,6 +1,12 @@
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -31,7 +37,7 @@
         android:id="@+id/textsBarrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_tags="durationTitle, albumTittle, yearTittle, genreTittle, countryTittle"
+        app:constraint_referenced_tags="durationTitle,albumTittle,yearTittle,genreTittle,countryTittle"
         app:barrierDirection="end" />
 
     <!-- Toolbar "Назад" -->
@@ -140,7 +146,6 @@
     <!-- Длительность-->
     <TextView
         android:id="@+id/durationTitle"
-        app:layout_constraintTag="durationTitle"
         style="@style/PlayerTittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -170,7 +175,6 @@
     <!-- Альбом-->
     <TextView
         android:id="@+id/albumTittle"
-        app:layout_constraintTag="albumTittle"
         style="@style/PlayerTittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -198,7 +202,6 @@
     <!-- Год -->
     <TextView
         android:id="@+id/yearTittle"
-        app:layout_constraintTag="yearTittle"
         style="@style/PlayerTittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -227,7 +230,6 @@
     <!-- Жанр -->
     <TextView
         android:id="@+id/genreTittle"
-        app:layout_constraintTag="genreTittle"
         style="@style/PlayerTittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -254,7 +256,6 @@
     <!-- Страна -->
     <TextView
         android:id="@+id/countryTittle"
-        app:layout_constraintTag="countryTittle"
         style="@style/PlayerTittle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -280,3 +281,107 @@
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Полупрозрачное затемнение -->
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bottom_sheet"
+        android:visibility="gone"
+        android:elevation="2dp" />
+
+    <!-- BottomSheet -->
+    <LinearLayout
+        android:id="@+id/playlistsBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        style="@style/BottomSheet"
+        android:elevation="4dp"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="240dp"
+        android:paddingHorizontal="@dimen/padding_normal"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <!-- "Ручка" для перетаскивания -->
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            style="@style/RounderBottomSheet"
+        />
+
+        <!-- Заголовок -->
+        <TextView
+            android:id="@+id/headerTitle"
+            style="@style/HeaderBottomSheet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingVertical="16dp"
+            android:text="@string/playlist_add_to_playlist" />
+
+        <!-- Кнопка "Новый плейлист" -->
+        <Button
+            android:id="@+id/newPlaylist"
+            style="@style/SearchUpdateButton"
+            app:cornerRadius="54dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="@string/media_add_new_playlist"
+            android:visibility="visible"/>
+
+        <!-- Список плейлистов -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewPlaylists"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:clipToPadding="false"
+            android:paddingBottom="8dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        <!-- Прогресс-бар -->
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/blue"
+            android:visibility="gone" />
+
+        <!-- Плейсхолдер, если нет данных -->
+        <LinearLayout
+            android:id="@+id/emptyPlaceholder"
+            android:layout_width="match_parent"
+            android:layout_height="505dp"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="505dp"
+            android:paddingHorizontal="@dimen/padding_normal"
+            style="@style/BottomSheet"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/imagePlaceholder"
+                style="@style/SearchNothingFoundImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/textError"
+                style="@style/MediaLibrariesFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/media_playlist_error" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

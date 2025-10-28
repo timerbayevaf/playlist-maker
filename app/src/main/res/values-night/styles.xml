@@ -191,4 +191,86 @@
         <item name="itemTextColor">@drawable/bottom_navigation_tab_bar_night</item>
     </style>
 
+    <style name="PlaylistContainer" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@color/background_night</item>
+        <item name="android:backgroundTint">@color/background_night</item>
+    </style>
+
+
+    <style name="PlaylistViewName">
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="ArtistCountTrack">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:fontFamily">@font/ys_display_regular</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="PlaylistHint" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="fontWeight">400</item>
+        <item name="boxStrokeColor">@color/playlist_edit_text_outline</item>
+        <item name="android:textColorHint">@color/white</item>
+        <item name="hintTextColor">@color/white</item>
+        <item name="android:hint">@string/playlist_name</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:letterSpacing">0.03</item>
+        <item name="boxCornerRadiusBottomEnd">4dp</item>
+        <item name="boxCornerRadiusBottomStart">4dp</item>
+        <item name="boxCornerRadiusTopEnd">4dp</item>
+        <item name="boxCornerRadiusTopStart">4dp</item>
+    </style>
+
+    <style name="CardViewCreateNewPlaylist">
+        <item name="android:backgroundTint">@color/background_night</item>
+        <item name="android:textColor">@color/background_night</item>
+    </style>
+
+    <style name="PlaylistButtonCreate">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="fontFamily">@font/ys_display_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="android:imeOptions">actionDone|flagNoExtractUi</item>
+        <item name="android:background">@drawable/playlist_button_create</item>
+        <item name="backgroundTint">@color/playlist_create_playlist</item>
+    </style>
+
+    <style name="HeaderBottomSheet">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">19sp</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+    </style>
+
+    <style name="BottomSheet">
+        <item name="android:background">@drawable/rounded_bottom_sheet</item>
+        <item name="android:backgroundTint">@color/background_night</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="DialogButtonStyleNight" parent="@style/Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/white</item> <!-- 🔥 белые кнопки -->
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="ThemeOverlay.App.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorSurface">@color/background_night</item>
+        <item name="colorOnSurface">@color/white</item>
+
+        <!-- кнопки -->
+        <item name="buttonBarPositiveButtonStyle">@style/DialogButtonStyleNight</item>
+        <item name="buttonBarNegativeButtonStyle">@style/DialogButtonStyleNight</item>
+    </style>
 </resources>

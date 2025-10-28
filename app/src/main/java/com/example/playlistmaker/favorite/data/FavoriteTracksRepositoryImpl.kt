@@ -1,8 +1,8 @@
 package com.example.playlistmaker.favorite.data
 
-import com.example.playlistmaker.data.db.AppDatabase
-import com.example.playlistmaker.data.db.TrackDbConvertor
-import com.example.playlistmaker.data.db.TrackEntity
+import com.example.playlistmaker.db.AppDatabase
+import com.example.playlistmaker.db.convertor.TrackDbConvertor
+import com.example.playlistmaker.db.entity.TrackEntity
 import com.example.playlistmaker.favorite.domain.api.FavoriteTracksRepository
 import com.example.playlistmaker.search.domain.models.Track
 import kotlinx.coroutines.Dispatchers
