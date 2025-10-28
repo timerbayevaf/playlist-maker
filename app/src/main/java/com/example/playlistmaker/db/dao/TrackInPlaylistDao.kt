@@ -11,7 +11,7 @@ interface TrackInPlaylistDao {
     @Insert(entity = TrackInPlaylistEntity::class, onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTrackInPlaylist(track: TrackInPlaylistEntity)
 
-    @Query("SELECT * FROM track_in_playlist_table WHERE track_id IN (:ids)")
+    @Query("SELECT * FROM track_in_playlist_table WHERE track_id IN (:ids) ORDER BY timestamp DESC")
     suspend fun getTracksByIds(ids: List<Int>): List<TrackInPlaylistEntity>
 
     // Удалить трек по id

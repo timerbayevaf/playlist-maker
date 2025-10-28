@@ -199,7 +199,8 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginStart="13dp"
+                android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_playlist_cover_small"
                 android:clipToOutline="true"
                 android:scaleType="centerCrop" />

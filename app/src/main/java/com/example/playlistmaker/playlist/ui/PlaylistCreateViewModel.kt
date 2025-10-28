@@ -1,15 +1,12 @@
 package com.example.playlistmaker.playlist.ui
 
 import android.content.Context
-import android.os.Environment
-import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.playlist.domain.api.PlaylistImageStorage
 import com.example.playlistmaker.playlist.domain.api.PlaylistInteractor
 import com.example.playlistmaker.playlist.domain.models.Playlist
-import java.io.File
 
 class PlaylistCreateViewModel(private val context: Context,
                               private val interactor: PlaylistInteractor,
@@ -23,25 +20,16 @@ class PlaylistCreateViewModel(private val context: Context,
         imageUrl: String?,
         tracksIds: List<Int>,
     ) {
-        val newPlaylist = Playlist(0, name, description, imageUrl, tracksIds)
-        interactor.insertPlaylist(newPlaylist)
-    }
+        var finalImageUrl = imageUrl
 
-    fun getImageUrlFromStorage(playlistName: String) {
-        val file = PlaylistImageStorage.getImageFileForPlaylist(context, playlistName)
-        val url = file.toUri().toString()
-        imageUrlLiveData.postValue(url)
-    }
-
-    fun renameImageFile(playlistName: String) {
-        val filePath = File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "playlist")
-        val temporaryFileName = "image.jpg"
-        val temporaryFile = File(filePath, temporaryFileName)
-
-        if (temporaryFile.exists()) {
-            val finalFile = File(filePath, "image_$playlistName.jpg")
-            temporaryFile.renameTo(finalFile)
+        // если пользователь выбрал картинку — переносим temp -> UUID
+        val newFileUri = PlaylistImageStorage.moveTempToFinal(context)
+        if (newFileUri != null) {
+            finalImageUrl = newFileUri
         }
+
+        val newPlaylist = Playlist(0, name, description, finalImageUrl, tracksIds)
+        interactor.insertPlaylist(newPlaylist)
     }
 
     suspend fun updatePlaylist(playlist: Playlist) {

@@ -109,7 +109,6 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
             bindPlaylist(state.playlist, state.totalDuration )
         }
 
-
         val layoutManager = LinearLayoutManager(context)
         binding.recycleViewBottomSheet.layoutManager = layoutManager
 
@@ -143,7 +142,7 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
 
     private fun renderSheet() {
         currentPlaylist?.let {
-             loadAlbumArt(it.imageUrl,binding.playlistCoverImageSheet)
+            loadAlbumArt(it.imageUrl,binding.playlistCoverImageSheet)
             binding.numberOfTracksSheet.text = context?.resources?.getQuantityString(
                 R.plurals.playlist_count_tracks,
                 it.countTracks,
@@ -167,14 +166,9 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
             putExtra(Intent.EXTRA_TEXT, message)
         }
 
-        // Создаём системный выбор приложений
         val chooser = Intent.createChooser(intent, getString(R.string.playlist_details_share))
 
-        // Запускаем Intent
         startActivity(chooser)
-
-        // ✅ Возвращаемся назад на экран "Плейлист"
-        findNavController().navigateUp()
     }
 
     private fun renderTracksState (state: DetailedTracksState) {
@@ -229,7 +223,6 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
                 .show()
         }
     }
-
 
     private fun deleteTrackFromPlaylist(track: Track) {
         currentPlaylist?.let { playlist ->
@@ -302,24 +295,24 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
         }
     }
 
-    private fun bindPlaylist(playlist: Playlist?, totalDuration: Int) {
-        playlist?.let {
-            binding.playlistName.text = playlist.name
-            val hasDescription = !playlist.description.isNullOrBlank()
+    private fun bindPlaylist(newPlaylist: Playlist?, totalDuration: Int) {
+        newPlaylist?.let {
+            binding.playlistName.text = newPlaylist.name
+            val hasDescription = !newPlaylist.description.isNullOrBlank()
             if (hasDescription) {
-                binding.playlistDetails.text = playlist.description
+                binding.playlistDetails.text = newPlaylist.description
                 binding.playlistDetails.visibility = View.VISIBLE
             } else {
                 binding.playlistDetails.visibility = View.GONE
             }
             binding.playlistTracks.text = context?.resources?.getQuantityString(
                 R.plurals.playlist_count_tracks,
-                playlist.countTracks,
-                playlist.countTracks
+                newPlaylist.countTracks,
+                newPlaylist.countTracks
             )
             binding.playlistMinutes.text = formatPlaylistDuration(totalDuration)
 
-            loadAlbumArt(playlist.imageUrl, binding.playlistImage)
+            loadAlbumArt(newPlaylist.imageUrl, binding.playlistImage)
         }
     }
 
