@@ -18,6 +18,7 @@
     <dimen name="icon_45">45dp</dimen>
     <dimen name="icon_5">5dp</dimen>
     <dimen name="icon_10">10dp</dimen>
+    <dimen name="icon_40">40dp</dimen>
     <dimen name="icon_14">14dp</dimen>
     <dimen name="icon_36">36dp</dimen>
     <dimen name="icon_63">63dp</dimen>

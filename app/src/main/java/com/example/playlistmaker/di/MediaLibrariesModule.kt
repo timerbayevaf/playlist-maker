@@ -10,6 +10,7 @@ import com.example.playlistmaker.favorite.data.FavoriteTracksRepositoryImpl
 import com.example.playlistmaker.favorite.domain.api.FavoriteTracksInteractor
 import com.example.playlistmaker.favorite.domain.api.FavoriteTracksRepository
 import com.example.playlistmaker.favorite.domain.impl.FavoriteTracksInteractorImpl
+import com.example.playlistmaker.medialibraries.ui.detailed.MedialibrariesDetailedPlaylistViewModel
 import com.example.playlistmaker.medialibraries.ui.playlists.MediaLibrariesPlaylistsViewModel
 import com.example.playlistmaker.medialibraries.ui.favorite.MediaLibrariesFavoriteTracksViewModel
 import com.example.playlistmaker.playlist.data.PlaylistRepositoryImpl
@@ -24,22 +25,19 @@ import org.koin.dsl.module
 
 val mediaLibrariesModule = module {
   factory { TrackDbConvertor() }
-
-  single<FavoriteTracksRepository> {
-    FavoriteTracksRepositoryImpl(get(), get())
-  }
-
   factory { PlaylistDbConvertor() }
-
-  single { get<Context>().contentResolver }
-
   factory { TrackInPlaylistDbConvertor() }
-
   factory {
     Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
       .fallbackToDestructiveMigration()
       .build()
   }
+
+  single<FavoriteTracksRepository> {
+    FavoriteTracksRepositoryImpl(get(), get())
+  }
+
+  single { get<Context>().contentResolver }
 
   single<FavoriteTracksInteractor> {
     FavoriteTracksInteractorImpl(get())
@@ -56,12 +54,13 @@ val mediaLibrariesModule = module {
   viewModel {
     PlaylistCreateViewModel(androidContext(), get())
   }
-
   viewModel {
     MediaLibrariesFavoriteTracksViewModel(get())
   }
   viewModel {
     MediaLibrariesPlaylistsViewModel(get())
   }
-
+  viewModel {
+    MedialibrariesDetailedPlaylistViewModel(get())
+  }
 }
