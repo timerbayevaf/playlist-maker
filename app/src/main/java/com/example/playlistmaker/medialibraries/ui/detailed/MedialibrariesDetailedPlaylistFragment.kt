@@ -77,13 +77,15 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
                     putParcelable(AudioPlayerFragment.ARG_TRACK, track.toUI())
                 }
 
-                findNavController().navigate(R.id.action_medialibrariesFragmentDetailedPlaylist_to_audioPlayerFragment, bundle)
+                findNavController().navigate(
+                    R.id.action_medialibrariesFragmentDetailedPlaylist_to_audioPlayerFragment,
+                    bundle
+                )
 
             }
         }
         onTrackClickLongDebounce = debounce(CLICK_DEBOUNCE_DELAY, viewLifecycleOwner.lifecycleScope, false) { track ->
-            track.let {
-                showDeleteTrackConfirmationDialog(it)            }
+            showDeleteTrackConfirmationDialog(track)
         }
 
         binding.recycleViewBottomSheet.adapter = adapter
@@ -118,7 +120,7 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
 
         binding.iconMenu.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            renderSheet();
+            renderSheet()
         }
 
         binding.deletePlaylist.setOnClickListener {
@@ -168,7 +170,11 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
 
         val chooser = Intent.createChooser(intent, getString(R.string.playlist_details_share))
 
-        startActivity(chooser)
+        try {
+            startActivity(chooser)
+        } catch (e: Exception) {
+            showToast(getString(R.string.no_tracks_to_share))
+        }
     }
 
     private fun renderTracksState (state: DetailedTracksState) {
@@ -177,7 +183,6 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
             is DetailedTracksState.Empty -> showEmpty()
             is DetailedTracksState.Default -> {}
             is DetailedTracksState.Removed -> findNavController().navigateUp()
-            else -> {}
         }
     }
 
@@ -233,21 +238,24 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
     fun Int.dpToPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
 
     private fun setupBottomSheet() {
-        val overlay = binding.dimOverlay
         val bottomSheet = binding.bottomSheetMenuDetails
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
-                overlay.visibility =
+                binding?.let {
+                    it.dimOverlay.visibility =
                     if (newState == BottomSheetBehavior.STATE_HIDDEN) View.GONE else View.VISIBLE
+                }
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
-                binding.dimOverlay.visibility = View.VISIBLE
-                binding.dimOverlay.isClickable = true
-                binding.recycleViewBottomSheet.isNestedScrollingEnabled = false
+                binding?.let {
+                    it.dimOverlay.visibility = View.VISIBLE
+                    it.dimOverlay.isClickable = true
+                    it.recycleViewBottomSheet.isNestedScrollingEnabled = false
+                }
             }
         })
 
@@ -260,7 +268,7 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
             shareTracksIfAvailable()
         }
 
-        overlay.setOnClickListener {
+        binding.dimOverlay.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
 
@@ -289,6 +297,8 @@ class MedialibrariesDetailedPlaylistFragment: Fragment() {
     }
 
     private fun shareTracksIfAvailable() {
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
         currentPlaylist?.let { playlist ->
             val prefix = getString(R.string.share_playlist_title_prefix)
             viewModel.sharePlaylist(playlist, prefix)

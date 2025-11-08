@@ -11,13 +11,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.playlistmaker.R
-import com.example.playlistmaker.audioplayer.ui.AudioPlayerFragment
 import com.example.playlistmaker.databinding.MedialibrariesFragmentPlaylistsBinding
 import com.example.playlistmaker.medialibraries.ui.detailed.MedialibrariesDetailedPlaylistFragment
 import com.example.playlistmaker.medialibraries.utils.PlaylistState
 import com.example.playlistmaker.playlist.domain.models.Playlist
 import com.example.playlistmaker.playlist.mappers.toUI
-import com.example.playlistmaker.search.data.mappers.toUI
 import com.example.playlistmaker.utils.debounce
 import org.koin.androidx.viewmodel.ext.android.activityViewModel
 
@@ -46,7 +44,11 @@ class MediaLibrariesPlaylistsFragment: Fragment() {
       val bundle = Bundle().apply {
         putParcelable(MedialibrariesDetailedPlaylistFragment.ARG_PLAYLIST, playlist.toUI())
       }
-      findNavController().navigate(R.id.action_mediaLibrariesFragment_to_medialibrariesFragmentDetailedPlaylist, bundle)
+
+      findNavController().navigate(
+        R.id.action_mediaLibrariesFragment_to_medialibrariesFragmentDetailedPlaylist,
+        bundle
+      )
 
     }
     binding.recyclerViewPlaylists.adapter = adapter

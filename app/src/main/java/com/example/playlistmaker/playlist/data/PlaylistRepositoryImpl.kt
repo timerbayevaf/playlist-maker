@@ -55,11 +55,11 @@ class PlaylistRepositoryImpl(
     }
 
     override suspend fun addDescriptionPlaylist(track: Track) = withContext(Dispatchers.IO)  {
-        val trackDao = appDatabase.trackInPlaylistDao()
-        val exists = trackDao.isTrackExists(track.trackId)
+        val trackInPlaylistDao = appDatabase.trackInPlaylistDao()
+        val exists = trackInPlaylistDao.isTrackExists(track.trackId)
         if (!exists) {
             val trackEntity = convertFromTrackToTrackEntity(track)
-            appDatabase.trackInPlaylistDao().insertTrackInPlaylist(trackEntity)
+            trackInPlaylistDao.insertTrackInPlaylist(trackEntity)
         }
     }
 

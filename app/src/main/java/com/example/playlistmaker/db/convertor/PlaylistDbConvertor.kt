@@ -15,7 +15,6 @@ class PlaylistDbConvertor {
             playlist.description,
             playlist.imageUrl,
             convertTracksIdsToString(playlist.tracksIds),
-            playlist.tracksIds.size
         )
     }
 
@@ -34,12 +33,11 @@ class PlaylistDbConvertor {
     fun addTrackToEntity(entity: PlaylistEntity, trackId: Int): PlaylistEntity {
         val currentList = convertStringTracksIdsToList(entity.tracksIds).toMutableList()
         if (!currentList.contains(trackId)) {
-            currentList.add(trackId)
+            currentList.add(0, trackId)
         }
 
         return entity.copy(
             tracksIds = convertTracksIdsToString(currentList),
-            countTracks = currentList.size
         )
     }
 

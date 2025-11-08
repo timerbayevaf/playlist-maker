@@ -165,6 +165,7 @@ class PlaylistEditFragment : Fragment() {
                 findNavController().navigateUp()
             }
         }
+        setFragmentResult("playlist_edited",Bundle())
     }
 
 
