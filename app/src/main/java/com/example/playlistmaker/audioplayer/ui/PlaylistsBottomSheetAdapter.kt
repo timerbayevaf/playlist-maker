@@ -10,7 +10,6 @@ class PlaylistsBottomSheetAdapter(
 ) : RecyclerView.Adapter<PlaylistViewBottomSheetHolder>() {
     private val playlists = ArrayList<Playlist>()
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewBottomSheetHolder =
         PlaylistViewBottomSheetHolder.from(parent)
 

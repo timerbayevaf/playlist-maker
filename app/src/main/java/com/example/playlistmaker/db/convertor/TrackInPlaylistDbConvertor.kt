@@ -26,9 +26,9 @@ class TrackInPlaylistDbConvertor {
             track.trackName,
             track.artistName,
             track.trackTimeMillis,
+            track.releaseDate,
             track.artworkUrl100,
             track.collectionName,
-            track.releaseDate,
             track.primaryGenreName,
             track.country,
             track.previewUrl

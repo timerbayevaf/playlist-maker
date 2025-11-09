@@ -112,16 +112,16 @@ class PlaylistCreateFragment: Fragment() {
 
     private fun createNewPlaylist() {
         val playlistName = binding.playlistName.text.toString()
-        viewModel.renameImageFile(playlistName)
+        val playlistDescription = binding.playlistDescription.text.toString()
 
         lifecycleScope.launch {
             viewModel.createNewPlaylist(
                 playlistName,
-                binding.playlistDescription.text.toString(),
-                urlImageForNewPlaylist,
+                playlistDescription,
+                null,
                 emptyList(),
             )
-            viewModel.getImageUrlFromStorage(playlistName)
+
             showToastPlaylistCreated(playlistName)
 
             val fromPlayer = arguments?.getBoolean("from_player", false) ?: false
